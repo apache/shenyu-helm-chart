@@ -20,7 +20,7 @@ github:
   homepage: https://shenyu.apache.org/
   labels:
     - shenyu
-    - helm chart
+    - helm-chart
   features:
     wiki: true
     issues: true
