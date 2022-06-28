@@ -1,0 +1,7 @@
+remote: origin
+target-branch: gh-pages
+chart-dirs:
+  - charts
+chart-repos:
+  - shenyu=https://apache.github.io/incubator-shenyu-helm-chart
+helm-extra-args: --timeout 600s
