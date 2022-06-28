@@ -1,0 +1,13 @@
+replicas: 1
+
+label: shenyu
+version: 2.4.2
+admin:
+  enabled: true
+  image: apache/shenyu-admin
+  tag: 2.4.2
+
+bootstrap:
+  enabled: true
+  image: apache/shenyu-bootstrap
+  tag: 2.4.2
