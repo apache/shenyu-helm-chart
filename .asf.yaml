@@ -16,11 +16,14 @@
 #
 
 github:
-  description: ShenYu is High-Performance Java API Gateway.
+  description: Helm Chart for deploying Apache ShenYu in Kubernetes
   homepage: https://shenyu.apache.org/
   labels:
     - shenyu
     - helm-chart
+    - helm
+    - kubernetes
+    - k8s
   features:
     wiki: true
     issues: true
