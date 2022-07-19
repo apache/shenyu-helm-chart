@@ -1,0 +1,35 @@
+# shenyu-bootstrap
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{.Release.Namespace}}
+  name: {{ template "shenyu.fullname" . }}-bootstrap
+spec:
+  selector:
+    matchLabels:
+      app: shenyu-bootstrap
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: shenyu-bootstrap
+    spec:
+      volumes:
+        - name: shenyu-bootstrap-config
+          configMap:
+            name: {{ template "shenyu.fullname" . }}-configmap
+            items:
+              - key: application-local.yml
+                path: application-local.yml
+      containers:
+        - name: shenyu-bootstrap
+          image: {{ .Values.bootstrap.image }}:{{ default "2.4.3" .Values.bootstrap.tag }}
+          ports:
+            - containerPort: 9195
+          env:
+            - name: TZ
+              value: Asia/Beijing
+          volumeMounts:
+            - name: shenyu-bootstrap-config
+              mountPath: /opt/shenyu-bootstrap/conf/application-local.yml
+              subPath: application-local.yml

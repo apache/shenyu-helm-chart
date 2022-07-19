@@ -1,9 +1,11 @@
 apiVersion: v2
 name: shenyu
 description: Helm Chart for deploying Apache ShenYu in Kubernetes
+namespace: shenyu
 type: application
-version: 2.4.3
-appVersion: "1.16.0"
+version: 2.4.5
+appVersion: "2.4.3"
 icon: https://shenyu.apache.org/img/logo.png
 maintainers:
   - name: erdengk
+  - name: aFlyBird0
