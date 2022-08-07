@@ -1,15 +1,21 @@
-# 示例使用 nodeport 方式暴露端口
+# Now we only support NodePort mode
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: {{.Release.Namespace}}
-  name: shenyu-bootstrap-svc
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "shenyu.fullname" . }}-bootstrap
+  labels:
+    "app.kubernetes.io/name": '{{ template "shenyu.name" .}}-bootstrap'
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+    "app.kubernetes.io/component": "shenyu-bootstrap"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
 spec:
   selector:
-    app: shenyu-bootstrap
+    "app.kubernetes.io/component": "shenyu-bootstrap"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
   type: NodePort
   ports:
     - protocol: TCP
       port: 9195
       targetPort: 9195
-      nodePort: 31195
+      nodePort: {{ .Values.bootstrap.nodePort }}

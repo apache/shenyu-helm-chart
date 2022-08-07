@@ -1,24 +1,55 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: {{.Release.Namespace}}
+  namespace: {{ .Release.Namespace }}
   name: {{ template "shenyu.fullname" . }}-admin
+  labels:
+    "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-admin'
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+    "app.kubernetes.io/component": "shenyu-admin"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
 spec:
   selector:
     matchLabels:
-      app: shenyu-admin
-  replicas: 1
+      "app.kubernetes.io/component": "shenyu-admin"
+      "app.kubernetes.io/instance": "{{ .Release.Name }}"
+  replicas: {{ .Values.replicas }}
   template:
     metadata:
       labels:
-        app: shenyu-admin
+        "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-admin'
+        "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+        "app.kubernetes.io/component": "shenyu-admin"
+        "app.kubernetes.io/instance": "{{ .Release.Name }}"
     spec:
       containers:
         - name: shenyu-admin
-          image: {{ .Values.admin.image }}:{{ default "2.4.3" .Values.admin.tag }}
+          image: {{ .Values.admin.image }}:{{ required "A valid .Values.version entry required!" .Values.version }}
           imagePullPolicy: Always
           ports:
             - containerPort: 9095
           env:
             - name: 'TZ'
               value: 'Asia/Beijing'
+          {{- if .Values.dataSource.mysql.enabled }}
+            - name: SPRING_PROFILES_ACTIVE
+              value: mysql
+          volumeMounts:
+          - name: shenyu-admin-config
+            mountPath: /opt/shenyu-admin/config/application-mysql.yml
+            subPath: application-mysql.yml
+          - mountPath: /opt/shenyu-admin/ext-lib
+            name: mysql-connector-volume
+          {{- end}}
+      {{- if .Values.dataSource.mysql.enabled }}
+      volumes:
+        - name: mysql-connector-volume
+          persistentVolumeClaim:
+            claimName: shenyu-pvc
+        - name: shenyu-admin-config
+          configMap:
+            name: shenyu-cm
+            items:
+              - key: application-mysql.yml
+                path: application-mysql.yml
+      {{- end }}

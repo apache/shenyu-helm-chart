@@ -1,11 +1,26 @@
-replicas: 1
-label: shenyu
 version: 2.4.3
+replicas: 1
 admin:
   enabled: true
   image: apache/shenyu-admin
-  tag: 2.4.3
+  nodePort: 31095
 bootstrap:
   enabled: true
   image: apache/shenyu-bootstrap
-  tag: 2.4.3
+  nodePort: 31195
+dataSource:
+  # only one dataSource is allowed
+  h2:
+    enabled: true
+  mysql:
+    enabled: false
+    ip:
+    port: 3306
+    username:
+    password:
+    # to specify where the mysql connector is
+    connector:
+      # the k8s node to store the mysql connector
+      nodeName:
+      # the path to the mysql connector in K8s node, this path should contain "mysql-connector.jar"
+      path: /home/shenyu/shenyu-admin/k8s-pv

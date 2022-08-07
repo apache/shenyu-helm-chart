@@ -1,0 +1,44 @@
+{{- if .Values.dataSource.mysql.enabled -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ template "shenyu.fullname" . }}-pv
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: {{ template "shenyu.fullname" . }}-local-storage
+  local:
+    path: {{ required ".Values.dataSource.mysql.connector.path is required" .Values.dataSource.mysql.connector.path }}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - {{ required ".Values.dataSource.mysql.connector.nodeName is required" .Values.dataSource.mysql.connector.nodeName }} # 指定节点
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "shenyu.fullname" . }}-pvc
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: {{ template "shenyu.fullname" . }}-local-storage
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ template "shenyu.fullname" . }}-local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+{{- end -}}

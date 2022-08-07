@@ -2,17 +2,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: {{.Release.Namespace}}
+  namespace: {{ .Release.Namespace }}
   name: {{ template "shenyu.fullname" . }}-bootstrap
+  labels:
+    "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-bootstrap'
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+    "app.kubernetes.io/component": "shenyu-bootstrap"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
 spec:
   selector:
     matchLabels:
-      app: shenyu-bootstrap
-  replicas: 1
+      "app.kubernetes.io/component": "shenyu-bootstrap"
+      "app.kubernetes.io/instance": "{{ .Release.Name }}"
+  replicas: {{ .Values.replicas }}
   template:
     metadata:
       labels:
-        app: shenyu-bootstrap
+        "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-bootstrap'
+        "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+        "app.kubernetes.io/component": "shenyu-bootstrap"
+        "app.kubernetes.io/instance": "{{ .Release.Name }}"
     spec:
       volumes:
         - name: shenyu-bootstrap-config
@@ -23,7 +32,7 @@ spec:
                 path: application-local.yml
       containers:
         - name: shenyu-bootstrap
-          image: {{ .Values.bootstrap.image }}:{{ default "2.4.3" .Values.bootstrap.tag }}
+          image: {{ .Values.bootstrap.image }}:{{ required "A valid .Values.version entry required!" .Values.version }}
           ports:
             - containerPort: 9195
           env:

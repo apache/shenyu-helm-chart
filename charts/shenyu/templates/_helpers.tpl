@@ -1,5 +1,10 @@
+{{- define "shenyu.name" -}}
+{{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+
 {{- define "shenyu.fullname" -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- $name := .Chart.Name -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}

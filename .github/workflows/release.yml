@@ -1,9 +1,10 @@
 name: Release Charts
 
 on:
-  push:
-    branches:
-      - "**-release"
+#  push:
+#    branches:
+#      - main
+  push: # only for test
 
 jobs:
   release:
