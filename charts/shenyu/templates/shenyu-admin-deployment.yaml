@@ -48,7 +48,7 @@ spec:
             claimName: {{ template "shenyu.fullname" . }}-pvc
         - name: shenyu-admin-config
           configMap:
-            name: shenyu-cm
+            name: {{ template "shenyu.fullname" . }}-configmap
             items:
               - key: application-mysql.yml
                 path: application-mysql.yml
