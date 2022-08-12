@@ -16,11 +16,7 @@ dataSource:
     enabled: false
     ip:
     port: 3306
-    username:
+    username: root
     password:
     # to specify where the mysql connector is
-    connector:
-      # the k8s node to store the mysql connector
-      nodeName:
-      # the path to the mysql connector in K8s node, this path should contain "mysql-connector.jar"
-      path: /home/shenyu/shenyu-admin/k8s-pv
+    storageClass:
