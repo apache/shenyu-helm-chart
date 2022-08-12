@@ -45,7 +45,7 @@ spec:
       volumes:
         - name: mysql-connector-volume
           persistentVolumeClaim:
-            claimName: shenyu-pvc
+            claimName: {{ template "shenyu.fullname" . }}-pvc
         - name: shenyu-admin-config
           configMap:
             name: shenyu-cm
