@@ -1,3 +1,4 @@
+{{- if .Values.admin.enabled -}}
 {{- if .Values.dataSource.mysql.enabled -}}
 kind: Service
 apiVersion: v1
@@ -21,4 +22,5 @@ subsets:
   ports:
   - port: {{ required "database.mysql.port is required" .Values.dataSource.mysql.port }}
     name: mysql
+{{- end -}}
 {{- end -}}

@@ -3,6 +3,11 @@ kind: ConfigMap
 metadata:
   namespace: {{.Release.Namespace}}
   name: {{ template "shenyu.fullname" . }}-configmap
+  labels:
+    "app.kubernetes.io/name": '{{ template "shenyu.name" . }}'
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+    "app.kubernetes.io/component": "shenyu-configmap"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
 data:
   application-local.yml: |
     server:

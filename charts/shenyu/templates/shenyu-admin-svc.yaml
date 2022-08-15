@@ -1,3 +1,4 @@
+{{- if .Values.admin.enabled -}}
 # Now we only support NodePort mode
 apiVersion: v1
 kind: Service
@@ -19,3 +20,4 @@ spec:
       port: 9095
       targetPort: 9095
       nodePort: {{ .Values.admin.nodePort }}
+{{- end -}}

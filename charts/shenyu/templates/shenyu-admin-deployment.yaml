@@ -1,3 +1,4 @@
+{{- if .Values.admin.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -53,3 +54,4 @@ spec:
               - key: application-mysql.yml
                 path: application-mysql.yml
       {{- end }}
+{{- end -}}
