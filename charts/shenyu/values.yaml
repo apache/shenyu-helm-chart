@@ -18,5 +18,5 @@ dataSource:
     port: 3306
     username: root
     password:
-    # to specify where the mysql connector is
+    # this directory in K8s node should contain mysql-connector.jar
     storageClass:
