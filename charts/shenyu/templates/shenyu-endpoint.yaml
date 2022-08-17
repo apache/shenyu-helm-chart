@@ -1,5 +1,5 @@
 {{- if .Values.admin.enabled -}}
-{{- if .Values.dataSource.mysql.enabled -}}
+{{- if eq .Values.dataSource.active "mysql" -}}
 kind: Service
 apiVersion: v1
 metadata:

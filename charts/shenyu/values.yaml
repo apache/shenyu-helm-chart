@@ -9,14 +9,21 @@ bootstrap:
   image: apache/shenyu-bootstrap
   nodePort: 31195
 dataSource:
-  # only one dataSource is allowed
+  # options: [h2, mysql]
+  active: h2
+  # init database and tables
+  initEnabled: true
   h2:
-    enabled: true
+    username: sa
+    password: sa
   mysql:
-    enabled: false
     ip:
     port: 3306
     username: root
     password:
-    # this directory in K8s node should contain mysql-connector.jar
+    # the existing storage class which stores mysql-connector.jar
     storageClass:
+    # mysql driver class name
+    # mysql5   : com.mysql.jdbc.Driver
+    # mysql6-8 : com.mysql.cj.jdbc.Driver
+    driverClass: com.mysql.cj.Driver

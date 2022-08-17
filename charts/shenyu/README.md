@@ -99,8 +99,7 @@ kubectl apply -f shenyu-store.yaml -n=shenyu
 
 ```shell
 helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
-      --set dataSource.mysql.enabled=false \
-      --set dataSource.mysql.enabled=true \
+      --set dataSource.active=mysql \
       --set dataSource.mysql.ip=127.0.0.1 \
       --set dataSource.mysql.port=3306 \
       --set dataSource.mysql.password=123456 \

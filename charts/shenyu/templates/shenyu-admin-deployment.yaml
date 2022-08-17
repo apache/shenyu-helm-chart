@@ -32,9 +32,13 @@ spec:
           env:
             - name: 'TZ'
               value: 'Asia/Beijing'
-          {{- if .Values.dataSource.mysql.enabled }}
-            - name: SPRING_PROFILES_ACTIVE
-              value: mysql
+          {{- if eq .Values.dataSource.active "h2" }}
+          volumeMounts:
+          - name: shenyu-admin-config
+            mountPath: /opt/shenyu-admin/config/application-h2.yml
+            subPath: application-h2.yml
+          {{- end}}
+          {{- if eq .Values.dataSource.active "mysql" }}
           volumeMounts:
           - name: shenyu-admin-config
             mountPath: /opt/shenyu-admin/config/application-mysql.yml
@@ -42,16 +46,23 @@ spec:
           - mountPath: /opt/shenyu-admin/ext-lib
             name: mysql-connector-volume
           {{- end}}
-      {{- if .Values.dataSource.mysql.enabled }}
       volumes:
+        {{- if eq .Values.dataSource.active "mysql" }}
         - name: mysql-connector-volume
           persistentVolumeClaim:
             claimName: {{ template "shenyu.fullname" . }}-pvc
+        {{- end }}
         - name: shenyu-admin-config
           configMap:
             name: {{ template "shenyu.fullname" . }}-configmap
             items:
-              - key: application-mysql.yml
-                path: application-mysql.yml
-      {{- end }}
+            {{- if eq .Values.dataSource.active "mysql" }}
+            - key: application-mysql.yml
+              path: application-mysql.yml
+            {{- end }}
+            {{- if eq .Values.dataSource.active "h2" }}
+            - key: application-h2.yml
+              path: application-h2.yml
+            {{- end }}
+
 {{- end -}}
