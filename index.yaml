@@ -1,0 +1,19 @@
+apiVersion: v1
+entries:
+  shenyu:
+  - apiVersion: v2
+    appVersion: 2.4.3
+    created: "2022-08-17T15:37:51.395841976Z"
+    description: Helm Chart for deploying Apache ShenYu in Kubernetes
+    digest: 055383e1668e6bed4fe29854c26f289d1c55e80f561910c6638daa10169521c0
+    icon: https://shenyu.apache.org/img/logo.png
+    maintainers:
+    - name: erdengk
+    - email: aflybird0@gmail.com
+      name: aFlyBird0
+    name: shenyu
+    type: application
+    urls:
+    - https://github.com/apache/shenyu-helm-chart/releases/download/shenyu-0.1.1/shenyu-0.1.1.tgz
+    version: 0.1.1
+generated: "2022-08-17T15:37:51.395846776Z"
