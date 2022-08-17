@@ -2,7 +2,6 @@ name: Lint and Test Charts
 
 on:
   pull_request:
-  push: # only for test
 
 jobs:
   lint-test:
