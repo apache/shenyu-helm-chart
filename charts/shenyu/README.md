@@ -46,7 +46,7 @@ helm install shenyu shenyu/shenyu -n=shenyu --create-namespace
 
 ### MySQL 作为数据库
 
-MySQL 安装方式需要提前安装好 MySQ，并提前创建好 pv 以存放 connector
+MySQL 安装方式需要提前安装好 MySQ，并提前创建好 pv 以存放 connector。详见 [部署先决条件](https://shenyu.apache.org/zh/docs/deployment/deployment-before/)。
 
 #### 1. 提前创建 pv
 
