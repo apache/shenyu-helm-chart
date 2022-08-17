@@ -1,13 +1,29 @@
+version: 2.4.3
 replicas: 1
-
-label: shenyu
-version: 2.4.2
 admin:
   enabled: true
   image: apache/shenyu-admin
-  tag: 2.4.2
-
+  nodePort: 31095
 bootstrap:
   enabled: true
   image: apache/shenyu-bootstrap
-  tag: 2.4.2
+  nodePort: 31195
+dataSource:
+  # options: [h2, mysql]
+  active: h2
+  # init database and tables
+  initEnabled: true
+  h2:
+    username: sa
+    password: sa
+  mysql:
+    ip:
+    port: 3306
+    username: root
+    password:
+    # the existing storage class which stores mysql-connector.jar
+    storageClass:
+    # mysql driver class name
+    # mysql5   : com.mysql.jdbc.Driver
+    # mysql6-8 : com.mysql.cj.jdbc.Driver
+    driverClass: com.mysql.cj.Driver

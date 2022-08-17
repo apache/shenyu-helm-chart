@@ -1,0 +1,68 @@
+{{- if .Values.admin.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "shenyu.fullname" . }}-admin
+  labels:
+    "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-admin'
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+    "app.kubernetes.io/component": "shenyu-admin"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+spec:
+  selector:
+    matchLabels:
+      "app.kubernetes.io/component": "shenyu-admin"
+      "app.kubernetes.io/instance": "{{ .Release.Name }}"
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-admin'
+        "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+        "app.kubernetes.io/component": "shenyu-admin"
+        "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    spec:
+      containers:
+        - name: shenyu-admin
+          image: {{ .Values.admin.image }}:{{ required "A valid .Values.version entry required!" .Values.version }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9095
+          env:
+            - name: 'TZ'
+              value: 'Asia/Beijing'
+          {{- if eq .Values.dataSource.active "h2" }}
+          volumeMounts:
+          - name: shenyu-admin-config
+            mountPath: /opt/shenyu-admin/config/application-h2.yml
+            subPath: application-h2.yml
+          {{- end}}
+          {{- if eq .Values.dataSource.active "mysql" }}
+          volumeMounts:
+          - name: shenyu-admin-config
+            mountPath: /opt/shenyu-admin/config/application-mysql.yml
+            subPath: application-mysql.yml
+          - mountPath: /opt/shenyu-admin/ext-lib
+            name: mysql-connector-volume
+          {{- end}}
+      volumes:
+        {{- if eq .Values.dataSource.active "mysql" }}
+        - name: mysql-connector-volume
+          persistentVolumeClaim:
+            claimName: {{ template "shenyu.fullname" . }}-pvc
+        {{- end }}
+        - name: shenyu-admin-config
+          configMap:
+            name: {{ template "shenyu.fullname" . }}-configmap
+            items:
+            {{- if eq .Values.dataSource.active "mysql" }}
+            - key: application-mysql.yml
+              path: application-mysql.yml
+            {{- end }}
+            {{- if eq .Values.dataSource.active "h2" }}
+            - key: application-h2.yml
+              path: application-h2.yml
+            {{- end }}
+
+{{- end -}}

@@ -1,0 +1,46 @@
+{{- if .Values.bootstrap.enabled -}}
+# shenyu-bootstrap
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "shenyu.fullname" . }}-bootstrap
+  labels:
+    "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-bootstrap'
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+    "app.kubernetes.io/component": "shenyu-bootstrap"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+spec:
+  selector:
+    matchLabels:
+      "app.kubernetes.io/component": "shenyu-bootstrap"
+      "app.kubernetes.io/instance": "{{ .Release.Name }}"
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-bootstrap'
+        "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+        "app.kubernetes.io/component": "shenyu-bootstrap"
+        "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    spec:
+      volumes:
+        - name: shenyu-bootstrap-config
+          configMap:
+            name: {{ template "shenyu.fullname" . }}-configmap
+            items:
+              - key: application-local.yml
+                path: application-local.yml
+      containers:
+        - name: shenyu-bootstrap
+          image: {{ .Values.bootstrap.image }}:{{ required "A valid .Values.version entry required!" .Values.version }}
+          ports:
+            - containerPort: 9195
+          env:
+            - name: TZ
+              value: Asia/Beijing
+          volumeMounts:
+            - name: shenyu-bootstrap-config
+              mountPath: /opt/shenyu-bootstrap/conf/application-local.yml
+              subPath: application-local.yml
+{{- end -}}
