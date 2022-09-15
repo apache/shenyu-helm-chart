@@ -15,8 +15,6 @@ helm repo update
 
 _See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation._
 
-todo: complete English version
-
 ---
 
 ## 使用Helm安装ShenYu
@@ -123,17 +121,18 @@ helm install shenyu shenyu/shenyu -n=shenyu --version=2.4.3 --create-namespace
 | dataSource.h2.password | string | `"sa"` | 密码   |
 
 #### MySQL
-| 配置项                             | 类型    | 默认值                   | 描述                    |
-|-----------------------------------|--------|-------------------------|------------------------|
-| dataSource.mysql.port             | int    | `3306`                  | 端口                    |
-| dataSource.mysql.username         | string | `"root"`                | 用户名                  |
-| dataSource.mysql.password         | string | `""`                    | 密码                    |
-| dataSource.mysql.connectorVersion | string | `"8.0.23"`              | connector 版本          |
-| dataSource.mysql.driverClass      | string | `"com.mysql.cj.Driver"` | mysql driver class 名字 |
+| 配置项                             | 类型    | 默认值                   | 描述                                                                                               |
+|-----------------------------------|--------|-------------------------|---------------------------------------------------------------------------------------------------|
+| dataSource.mysql.ip               | string | `""`                    | IP                                                                                                |
+| dataSource.mysql.port             | int    | `3306`                  | 端口                                                                                               |
+| dataSource.mysql.username         | string | `"root"`                | 用户名                                                                                             |
+| dataSource.mysql.password         | string | `""`                    | 密码                                                                                               |
+| dataSource.mysql.connectorVersion | string | `"8.0.23"`              | connector 版本([maven connector 列表](https://repo1.maven.org/maven2/mysql/mysql-connector-java/)) |
+| dataSource.mysql.driverClass      | string | `"com.mysql.cj.Driver"` | mysql driver class 名字                                                                            |
 
 ### application.yml 配置
 | 配置项                       | 类型    | 默认值 | 描述                                                                                                                      |
 |-----------------------------|--------|-------|--------------------------------------------------------------------------------------------------------------------------|
-| applicationConfig.bootstrap | string | `""`  | bootstrap 配置，[bootstrap 配置说明](https://shenyu.apache.org/zh/docs/user-guide/property-config/gateway-property-config) |
-| applicationConfig.admin     | string | `""`  | admin 配置，[admin 配置说明](https://shenyu.apache.org/zh/docs/user-guide/property-config/admin-property-config)           |
-| adminLogBackXml             | string | `""`  | admin 的 logback.xml                                                                                                     |
+| applicationConfig.bootstrap | string | 略    | bootstrap 配置，[bootstrap 配置说明](https://shenyu.apache.org/zh/docs/user-guide/property-config/gateway-property-config) |
+| applicationConfig.admin     | string | 略    | admin 配置，[admin 配置说明](https://shenyu.apache.org/zh/docs/user-guide/property-config/admin-property-config)           |
+| adminLogBackXml             | string | 略    | admin 的 logback.xml                                                                                                     |
