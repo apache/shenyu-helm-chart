@@ -66,7 +66,8 @@ helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
 ### 1. 需要大量修改配置信息，如修改 application.yaml ，如何安装
 
 1. 下载完整 values.yaml
-`curl -s -o values.yaml https://raw.githubusercontent.com/apache/shenyu-helm-chart/main/charts/shenyu/values.yaml`
+* 最新 chart 版本：`helm show values shenyu/shenyu > values.yaml`
+* 特定 chart 版本, 如 `0.2.0`: `helm show values shenyu/shenyu --version=0.2.0 > values.yaml`
 2. 修改 values.yaml 文件
 3. 更改相应配置，使用 `-f values.yaml` 的格式执行 `helm install` 命令。
 如：`helm install shenyu shenyu/shenyu -n=shenyu --create-namespace -f values.yaml`
