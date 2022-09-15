@@ -13,8 +13,6 @@ data:
     {{- include "common.tplvalues.render" (dict "value" .Values.applicationConfig.bootstrap "context" $) | nindent 4 }}
   application-admin.yml: |-
     {{- include "common.tplvalues.render" (dict "value" .Values.applicationConfig.admin "context" $) | nindent 4 }}
-  logback.xml: |-
-    {{ .Values.adminLogBackXml | quote}}
   {{- if eq .Values.dataSource.active "h2" }}
   application-h2.yml: |-
     shenyu:

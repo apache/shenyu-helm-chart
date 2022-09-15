@@ -33,7 +33,7 @@ helm repo update
 
 ### 部署先决条件
 
-在阅读本文档前，你需要先阅读[部署先决条件](https://shenyu.apache.org/zh/docs/deployment/deployment-before)来完成部署 ShenYu 前的环境准备工作.
+在阅读本文档前，你需要先阅读[部署先决条件](https://shenyu.apache.org/zh/docs/deployment/deployment-before)来完成部署 ShenYu 前的环境准备工作。
 
 ### 说明
 
@@ -59,17 +59,24 @@ helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
       --set dataSource.mysql.ip=127.0.0.1 \
       --set dataSource.mysql.port=3306 \
       --set dataSource.mysql.password=123456 \
-      --set dataSource.mysql.storageClass=shenyu-local-storage
 ```
 
 ## Q&A
 
-### 1. 如何只安装 admin 或 bootstrap
+### 1. 需要大量修改配置信息，如修改 application.yaml ，如何安装
+
+1. 下载完整 values.yaml
+`curl -s -o values.yaml https://raw.githubusercontent.com/apache/shenyu-helm-chart/main/charts/shenyu/values.yaml`
+2. 修改 values.yaml 文件
+3. 更改相应配置，使用 `-f values.yaml` 的格式执行 `helm install` 命令。
+如：`helm install shenyu shenyu/shenyu -n=shenyu --create-namespace -f values.yaml`
+
+### 2. 如何只安装 admin 或 bootstrap
 
 * 只安装 admin:     在 helm 安装命令末尾加上 `--set bootstrap.enabled=false`
 * 只安装 bootstrap: 在 helm 安装命令末尾加上 `--set admin.enabled=false`
 
-### 2. 如何安装旧版本 ShenYu
+### 3. 如何安装旧版本 ShenYu
 
 ```shell
 helm search repo shenyu -l
@@ -89,7 +96,7 @@ shenyu/shenyu   0.2.0           2.5.0         Helm Chart for deploying Apache Sh
 根据要安装的 ShenYu 版本来选择对应的 Chart 版本，在命令末尾加上 `--version=CHART_VERSION` 参数即可。例如：
 
 ```shell
-helm install shenyu shenyu/shenyu -n=shenyu --version=2.4.3 --create-namespace
+helm install shenyu shenyu/shenyu -n=shenyu --version=0.2.0 --create-namespace
 ```
 
 ## Values 配置说明
@@ -97,7 +104,7 @@ helm install shenyu shenyu/shenyu -n=shenyu --version=2.4.3 --create-namespace
 ### 全局配置
 | 配置项              | 类型    | 默认值                       | 描述                                   |
 |--------------------|--------|-----------------------------|---------------------------------------|
-| replicas           | int    | `1`                         | replicas                              |
+| replicas           | int    | `1`                         | 副本数量                               |
 | version            | string | `"2.5.0"`                   | shenyu 版本，不建议修改，请直接安装对应版本 |
 | admin.enabled      | bool   | `true`                      | 是否安装 shenyu-admin                  |
 | admin.image        | string | `"apache/shenyu-admin"`     | shenyu-admin 镜像                      |
@@ -135,4 +142,3 @@ helm install shenyu shenyu/shenyu -n=shenyu --version=2.4.3 --create-namespace
 |-----------------------------|--------|-------|--------------------------------------------------------------------------------------------------------------------------|
 | applicationConfig.bootstrap | string | 略    | bootstrap 配置，[bootstrap 配置说明](https://shenyu.apache.org/zh/docs/user-guide/property-config/gateway-property-config) |
 | applicationConfig.admin     | string | 略    | admin 配置，[admin 配置说明](https://shenyu.apache.org/zh/docs/user-guide/property-config/admin-property-config)           |
-| adminLogBackXml             | string | 略    | admin 的 logback.xml                                                                                                     |
