@@ -1,3 +1,6 @@
+# helm pkg
+*.tgz
+
 # maven ignore
 target/
 *.class

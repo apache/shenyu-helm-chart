@@ -7,6 +7,7 @@ appVersion: "2.5.0"
 icon: https://shenyu.apache.org/img/logo.png
 maintainers:
   - name: erdengk
+    email: wannengdek@gmail.com
   - name: aFlyBird0
     email: aflybird0@gmail.com
 dependencies:
