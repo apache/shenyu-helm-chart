@@ -48,7 +48,7 @@ spec:
               value: 'Asia/Beijing'
           volumeMounts:
           - name: shenyu-admin-config
-            mountPath: /opt/shenyu-admin/config
+            mountPath: /opt/shenyu-admin/conf
           {{- if eq .Values.dataSource.active "mysql" }}
           - name: mysql-connector-volume
             mountPath: /opt/shenyu-admin/ext-lib
@@ -63,7 +63,7 @@ spec:
             name: {{ template "common.names.fullname" . }}-configmap
             items:
             - key: application-admin.yml
-              path: application-admin.yml
+              path: application.yml
             {{- if eq .Values.dataSource.active "mysql" }}
             - key: application-mysql.yml
               path: application-mysql.yml

@@ -30,7 +30,7 @@ spec:
             name: {{ template "common.names.fullname" . }}-configmap
             items:
               - key: application-bootstrap.yml
-                path: application-bootstrap.yml
+                path: application.yml
       containers:
         - name: shenyu-bootstrap
           image: {{ .Values.bootstrap.image }}:{{ required "A valid .Values.version entry required!" .Values.version }}
