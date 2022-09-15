@@ -2,63 +2,21 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   namespace: {{.Release.Namespace}}
-  name: {{ template "shenyu.fullname" . }}-configmap
+  name: {{ template "common.names.fullname" . }}-configmap
   labels:
-    "app.kubernetes.io/name": '{{ template "shenyu.name" . }}'
+    "app.kubernetes.io/name": '{{ template "common.names.name" . }}'
     "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
     "app.kubernetes.io/component": "shenyu-configmap"
     "app.kubernetes.io/instance": "{{ .Release.Name }}"
 data:
-  application-local.yml: |
-    server:
-      port: 9195
-      address: 0.0.0.0
-    spring:
-      profiles:
-        active: {{ .Values.dataSource.active }}
-      main:
-        allow-bean-definition-overriding: true
-      application:
-        name: shenyu-bootstrap
-    management:
-      health:
-        defaults:
-        enabled: false
-    shenyu:
-      local:
-        enabled: true
-      file:
-        enabled: true
-      cross:
-        enabled: true
-      dubbo:
-        parameter: multi
-      sync:
-        websocket:
-          urls: ws://{{ template "shenyu.fullname" . }}-admin.shenyu.svc.cluster.local:9095/websocket
-      exclude:
-        enabled: false
-        paths:
-        - /favicon.ico
-      extPlugin:
-        enabled: true
-        threads: 1
-        scheduleTime: 300
-        scheduleDelay: 30
-      scheduler:
-        enabled: false
-        type: fixed
-        threads: 16
-    logging:
-      level:
-        root: info
-        org.springframework.boot: info
-        org.apache.ibatis: info
-        org.apache.shenyu.bonuspoint: info
-        org.apache.shenyu.lottery: info
-        org.apache.shenyu: info
+  application-bootstrap.yml: |-
+    {{- include "common.tplvalues.render" (dict "value" .Values.applicationConfig.bootstrap "context" $) | nindent 4 }}
+  application-admin.yml: |-
+    {{- include "common.tplvalues.render" (dict "value" .Values.applicationConfig.admin "context" $) | nindent 4 }}
+  logback.xml: |-
+    {{ .Values.adminLogBackXml | quote}}
   {{- if eq .Values.dataSource.active "h2" }}
-  application-h2.yml: |
+  application-h2.yml: |-
     shenyu:
       database:
         dialect: h2
@@ -72,15 +30,15 @@ data:
         driver-class-name: org.h2.Driver
   {{- end }}
   {{- if eq .Values.dataSource.active "mysql" }}
-  application-mysql.yml: |
+  application-mysql.yml: |-
     shenyu:
       database:
         dialect: mysql
         init_enable: {{ .Values.dataSource.initEnabled }}
     spring:
       datasource:
-        url: jdbc:mysql://{{ template "shenyu.fullname" . }}-mysql.shenyu.svc.cluster.local:3306/shenyu?useUnicode=true&characterEncoding=utf-8&useSSL=false
+        url: jdbc:mysql://{{ template "common.names.fullname" . }}-mysql.shenyu.svc.cluster.local:3306/shenyu?useUnicode=true&characterEncoding=utf-8&useSSL=false
         username: {{ .Values.dataSource.mysql.username }}
-        password: {{ .Values.dataSource.mysql.password }}
+        password: {{ required "`dataSource.mysql.password` is required" .Values.dataSource.mysql.password }}
         driver-class-name: {{ .Values.dataSource.mysql.driverClass }}
   {{- end }}

@@ -1,13 +1,24 @@
-version: 2.4.3
+#################################################
+#                global configs                 #
+#################################################
+# it's not recommended to change this version
+version: 2.5.0
 replicas: 1
 admin:
   enabled: true
   image: apache/shenyu-admin
+  # if you want to change `server.port`, please edit here
   nodePort: 31095
 bootstrap:
   enabled: true
   image: apache/shenyu-bootstrap
+  # if you want to change `server.port`, please edit here
   nodePort: 31195
+
+#################################################
+#     datasource config of shenyu-admin         #
+#################################################
+
 dataSource:
   # options: [h2, mysql]
   active: h2
@@ -21,9 +32,496 @@ dataSource:
     port: 3306
     username: root
     password:
-    # the existing storage class which stores mysql-connector.jar
-    storageClass:
     # mysql driver class name
     # mysql5   : com.mysql.jdbc.Driver
     # mysql6-8 : com.mysql.cj.jdbc.Driver
     driverClass: com.mysql.cj.Driver
+    connectorVersion: 8.0.23
+
+#################################################
+#     application.yml of admin and bootstrap    #
+#################################################
+
+applicationConfig:
+  bootstrap:
+    # Licensed to the Apache Software Foundation (ASF) under one or more
+    # contributor license agreements.  See the NOTICE file distributed with
+    # this work for additional information regarding copyright ownership.
+    # The ASF licenses this file to You under the Apache License, Version 2.0
+    # (the "License"); you may not use this file except in compliance with
+    # the License.  You may obtain a copy of the License at
+    #
+    #     http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+    server:
+      # Do not change this port, it is used by the Kubernetes service
+      port: 9195
+      address: 0.0.0.0
+
+    spring:
+      main:
+        allow-bean-definition-overriding: true
+        allow-circular-references: true
+      application:
+        name: shenyu-bootstrap
+      codec:
+        max-in-memory-size: 2MB
+      cloud:
+        discovery:
+          enabled: false
+        nacos:
+          discovery:
+            # Spring Cloud Alibaba Dubbo use this.
+            server-addr: 127.0.0.1:8848
+            enabled: false
+            namespace: ShenyuRegisterCenter
+
+    # if you want use ribbon please config every server.
+    # springCloud-test:
+    #  ribbon:
+    #    NIWSServerListClassName: com.netflix.niws.loadbalancer.DiscoveryEnabledNIWSServerList
+
+    eureka:
+      client:
+        enabled: false
+        serviceUrl:
+          defaultZone: http://localhost:8761/eureka/
+      instance:
+        prefer-ip-address: true
+
+    #  security:
+    #    oauth2:
+    #      client:
+    #        registration:
+    #          <your client-registration-id>:
+    #            client-id: <your client-id>
+    #            client-secret: <your client-secret>
+    #        provider:
+    #          <your client-registration-id>:
+    #            authorization-uri: <your authorization-uri>
+    #            token-uri: <your access-token-uri>
+    #            user-info-uri: <your user-info-uri>
+    #            jwk-set-uri: <your jwk-set-uri>
+
+    management:
+      health:
+        defaults:
+          enabled: false
+
+    shenyu:
+      matchCache:
+        enabled: false
+        # 256MB
+        maxFreeMemory: 256
+      netty:
+        http:
+          # set to false, user can custom the netty tcp server config.
+          webServerFactoryEnabled: true
+          selectCount: 1
+          workerCount: 4
+          accessLog: false
+          serverSocketChannel:
+            soRcvBuf: 87380
+            soBackLog: 128
+            soReuseAddr: false
+            connectTimeoutMillis: 10000
+            writeBufferHighWaterMark: 65536
+            writeBufferLowWaterMark: 32768
+            writeSpinCount: 16
+            autoRead: false
+            allocType: "pooled"
+            messageSizeEstimator: 8
+            singleEventExecutorPerGroup: true
+          socketChannel:
+            soKeepAlive: false
+            soReuseAddr: false
+            soLinger: -1
+            tcpNoDelay: true
+            soRcvBuf: 87380
+            soSndBuf: 16384
+            ipTos: 0
+            allowHalfClosure: false
+            connectTimeoutMillis: 10000
+            writeBufferHighWaterMark: 65536
+            writeBufferLowWaterMark: 32768
+            writeSpinCount: 16
+            autoRead: false
+            allocType: "pooled"
+            messageSizeEstimator: 8
+            singleEventExecutorPerGroup: true
+      #  httpclient:
+      #    strategy: webClient
+      #    connectTimeout: 45000
+      #    responseTimeout: 3000
+      #    readerIdleTime: 3000
+      #    writerIdleTime: 3000
+      #    allIdleTime: 3000
+      #    readTimeout: 3000
+      #    writeTimeout: 3000
+      #    wiretap: false
+      #    keepAlive: false
+      #    maxInMemorySize: 1 #1mb
+      #    pool:
+      #      type: ELASTIC
+      #      name: proxy
+      #      maxConnections: 16
+      #      acquireTimeout: 45000
+      #      maxIdleTime: 3000
+      #    proxy:
+      #      host:
+      #      port:
+      #      username:
+      #      password:
+      #      nonProxyHostsPattern:
+      #    ssl:
+      #      useInsecureTrustManager: true
+      #      keyStoreType: PKCS12
+      #      keyStorePath: classpath:keystore.p12
+      #      keyStorePassword: 123456
+      #      keyStoreProvider:
+      #      keyPassword: 123456
+      #      trustedX509Certificates:
+      #      handshakeTimeout:
+      #      closeNotifyFlushTimeout:
+      #      closeNotifyReadTimeout:
+      #      defaultConfigurationType:
+      #    threadPool:
+      #      prefix: shenyu
+      #      selectCount: 1
+      #      workerCount: 8
+      #      daemon: true
+      instance:
+        enabled: false
+        # zookeeper, etcd, consul
+        registerType: zookeeper
+        # http://localhost:2379 #localhost:8848
+        serverLists: localhost:2181
+        props:
+      cross:
+        enabled: true
+        allowedHeaders:
+        allowedMethods: "*"
+        # the same of Access-Control-Allow-Origin: "*"
+        allowedAnyOrigin: true
+          #    allowedOrigin:
+        # format : schema://prefix spacer domain
+        # Access-Control-Allow-Origin: "http://a.apache.org,http://b.apache.org"
+        #      spacer: "."
+        #      domain: apache.org
+        #      prefixes:
+        #        - a # a.apache.org
+        #        - b # b.apache.org
+        #      origins:
+        #        - c.apache.org
+        #        - d.apache.org
+        #        - http://e.apache.org
+        #      originRegex: ^http(|s)://(.*\.|)abc.com$
+        allowedExpose: ""
+        maxAge: "18000"
+        allowCredentials: true
+
+      switchConfig:
+        local: true
+      file:
+        enabled: true
+        maxSize: 10
+      sync:
+        websocket:
+          urls: ws://{{ template "common.names.fullname" . }}-admin.shenyu.svc.cluster.local:9095/websocket
+          allowOrigin: ws://{{ template "common.names.fullname" . }}-bootstrap.shenyu.svc.cluster.local:9195
+      #    zookeeper:
+      #      url: localhost:2181
+      #      sessionTimeout: 5000
+      #      connectionTimeout: 2000
+      #    http:
+      #      url: http://{{ template "common.names.fullname" . }}-admin.shenyu.svc.cluster.local:9095
+      #      username:
+      #      password:
+      #    nacos:
+      #      url: localhost:8848
+      #      namespace: 1c10d748-af86-43b9-8265-75f487d20c6c
+      #      username:
+      #      password:
+      #      acm:
+      #        enabled: false
+      #        endpoint: acm.aliyun.com
+      #        namespace:
+      #        accessKey:
+      #        secretKey:
+      #    etcd:
+      #      url: http://localhost:2379
+      #    consul:
+      #      url: http://localhost:8500
+      #      waitTime: 1000
+      #      watchDelay: 1000
+      exclude:
+        enabled: false
+        paths:
+          - /favicon.ico
+      fallback:
+        enabled: false
+        paths:
+          - /fallback/hystrix
+          - /fallback/resilience4j
+      health:
+        enabled: false
+        paths:
+          - /actuator/health
+          - /health_check
+      extPlugin:
+        path:
+        enabled: true
+        threads: 1
+        scheduleTime: 300
+        scheduleDelay: 30
+      scheduler:
+        enabled: false
+        type: fixed
+        threads: 16
+      upstreamCheck:
+        enabled: false
+        timeout: 3000
+        healthyThreshold: 1
+        unhealthyThreshold: 1
+        interval: 5000
+        printEnabled: true
+        printInterval: 60000
+      ribbon:
+        serverListRefreshInterval: 10000
+      metrics:
+        enabled: false
+        name: prometheus
+        host: 127.0.0.1
+        port: 8090
+        jmxConfig:
+        props:
+          jvm_enabled: true
+      #  plugins:
+      #    rate-limiter.enabled: false
+      local:
+        enabled: false
+        sha512Key: "BA3253876AED6BC22D4A6FF53D8406C6AD864195ED144AB5C87621B6C233B548BAEAE6956DF346EC8C17F5EA10F35EE3CBC514797ED7DDD3145464E2A0BAB413"
+    #  sharedPool:
+    #    enable: true
+    #    prefix: "shenyu-shared"
+    #    corePoolSize: 200
+    #    maximumPoolSize: 2000
+    #    keepAliveTime: 60000
+    #    # 1GB
+    #    maxWorkQueueMemory: 1073741824
+    #    # 256MB
+    #    maxFreeMemory: 268435456
+
+    logging:
+      level:
+        root: info
+        org.springframework.boot: info
+        org.apache.ibatis: info
+        org.apache.shenyu.bonuspoint: info
+        org.apache.shenyu.lottery: info
+        org.apache.shenyu: info
+  admin:
+    # Licensed to the Apache Software Foundation (ASF) under one or more
+    # contributor license agreements.  See the NOTICE file distributed with
+    # this work for additional information regarding copyright ownership.
+    # The ASF licenses this file to You under the Apache License, Version 2.0
+    # (the "License"); you may not use this file except in compliance with
+    # the License.  You may obtain a copy of the License at
+    #
+    #     http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+
+    server:
+      # Do not change this port, it is used by the Kubernetes service
+      port: 9195
+      address: 0.0.0.0
+
+    spring:
+      profiles:
+        active: "{{ .Values.dataSource.active }}"
+      thymeleaf:
+        cache: true
+        encoding: utf-8
+        enabled: true
+        prefix: classpath:/static/
+        suffix: .html
+      mvc:
+        pathmatch:
+          matching-strategy: ant_path_matcher
+
+    mybatis:
+      config-location: classpath:/mybatis/mybatis-config.xml
+      mapper-locations: classpath:/mappers/*.xml
+
+    shenyu:
+      register:
+        # http #zookeeper #etcd #nacos #consul
+        registerType: http
+        # localhost:2181 #http://localhost:2379 #localhost:8848
+        serverLists:
+        props:
+          sessionTimeout: 5000
+          connectionTimeout: 2000
+          checked: true
+          zombieCheckTimes: 5
+          scheduledTime: 10
+          nacosNameSpace: ShenyuRegisterCenter
+      sync:
+        websocket:
+          enabled: true
+          messageMaxSize: 10240
+          allowOrigins: ws://{{ template "common.names.fullname" . }}-admin.shenyu.svc.cluster.local:9095;{{ template "common.names.fullname" . }}-bootstrap.shenyu.svc.cluster.local:9195;
+      #      zookeeper:
+      #        url: localhost:2181
+      #        sessionTimeout: 5000
+      #        connectionTimeout: 2000
+      #      http:
+      #        enabled: true
+      #      nacos:
+      #        url: localhost:8848
+      #        namespace: 1c10d748-af86-43b9-8265-75f487d20c6c
+      #        username:
+      #        password:
+      #        acm:
+      #          enabled: false
+      #          endpoint: acm.aliyun.com
+      #          namespace:
+      #          accessKey:
+      #          secretKey:
+      #    etcd:
+      #      url: http://localhost:2379
+      #    consul:
+      #      url: http://localhost:8500
+      ldap:
+        enabled: false
+        url: ldap://xxxx:xxx
+        bind-dn: cn=xxx,dc=xxx,dc=xxx
+        password: xxxx
+        base-dn: ou=xxx,dc=xxx,dc=xxx
+        object-class: person
+        login-field: cn
+      jwt:
+        expired-seconds: 86400000
+      shiro:
+        white-list:
+          - /
+          - /favicon.*
+          - /static/**
+          - /index**
+          - /platform/login
+          - /websocket
+          - /error
+          - /actuator/health
+          - /swagger-ui.html
+          - /webjars/**
+          - /swagger-resources/**
+          - /v2/api-docs
+          - /csrf
+      swagger:
+        enable: true
+
+    logging:
+      level:
+        root: info
+        org.springframework.boot: info
+        org.apache.ibatis: info
+        org.apache.shenyu.bonuspoint: info
+        org.apache.shenyu.lottery: info
+        org.apache.shenyu: info
+adminLogBackXml: |-
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+  <configuration>
+  <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+  <property name="LOG_HOME" value="${log.home:-./logs}"/>
+  <property name="LOG_APP_NAME" value="${log.app-name:-shenyu-bootstrap}"/>
+  <property name="MAX_SINGLE_LOG_FILE_SIZE" value="${log.max-single-log-file-size:-100MB}"/>
+  <property name="MAX_LOG_FILE_HISTORY" value="${log.max-log-file-history:-7}"/>
+  <property name="LOG_FILE_TOTAL_CAPACITY" value="${log.log-file-total-capacity:-10GB}"/>
+  <property name="ASYNC_DISCARDING_THRESHOLD" value="${log.async.discarding-threshold:-0}"/>
+  <property name="ASYNC_LOG_QUEUE_SIZE" value="${log.async.queue-size:-256}"/>
+  <property name="LOG_PATTERN" value="%red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger) - %cyan(%msg%n)"/>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  <encoder>
+  <pattern>${LOG_PATTERN}</pattern>
+  </encoder>
+  </appender>
+  <appender name="ASYNC_STDOUT" class="ch.qos.logback.classic.AsyncAppender">
+  <discardingThreshold>${ASYNC_DISCARDING_THRESHOLD}</discardingThreshold>
+  <queueSize>${ASYNC_LOG_QUEUE_SIZE}</queueSize>
+  <includeCallerData>true</includeCallerData>
+  <appender-ref ref="STDOUT"/>
+  </appender>
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>${LOG_HOME}/${LOG_APP_NAME}.log</file>
+  <append>true</append>
+  <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+  <fileNamePattern>${LOG_HOME}/${LOG_APP_NAME}.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+  <maxFileSize>${MAX_SINGLE_LOG_FILE_SIZE}</maxFileSize>
+  <maxHistory>${MAX_LOG_FILE_HISTORY}</maxHistory>
+  <totalSizeCap>${LOG_FILE_TOTAL_CAPACITY}</totalSizeCap>
+  </rollingPolicy>
+  <encoder>
+  <pattern>${LOG_PATTERN}</pattern>
+  </encoder>
+  </appender>
+  <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+  <discardingThreshold>${ASYNC_DISCARDING_THRESHOLD}</discardingThreshold>
+  <queueSize>${ASYNC_LOG_QUEUE_SIZE}</queueSize>
+  <includeCallerData>true</includeCallerData>
+  <appender-ref ref="FILE"/>
+  </appender>
+  <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <filter class="ch.qos.logback.classic.filter.LevelFilter">
+  <level>ERROR</level>
+  <onMatch>ACCEPT</onMatch>
+  <onMismatch>DENY</onMismatch>
+  </filter>
+  <file>${LOG_HOME}/${LOG_APP_NAME}-error.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+  <fileNamePattern>${LOG_HOME}/${LOG_APP_NAME}.%d{yyyy-MM-dd}-error.%i.log.zip</fileNamePattern>
+  <maxFileSize>${MAX_SINGLE_LOG_FILE_SIZE}</maxFileSize>
+  <maxHistory>${MAX_LOG_FILE_HISTORY}</maxHistory>
+  <totalSizeCap>${LOG_FILE_TOTAL_CAPACITY}</totalSizeCap>
+  </rollingPolicy>
+  <encoder>
+  <pattern>${LOG_PATTERN}</pattern>
+  </encoder>
+  </appender>
+  <appender name="ASYNC_ERROR_FILE" class="ch.qos.logback.classic.AsyncAppender">
+  <discardingThreshold>${ASYNC_DISCARDING_THRESHOLD}</discardingThreshold>
+  <queueSize>${ASYNC_LOG_QUEUE_SIZE}</queueSize>
+  <includeCallerData>true</includeCallerData>
+  <appender-ref ref="ERROR_FILE"/>
+  </appender>
+  <root level="INFO">
+  <appender-ref ref="ASYNC_STDOUT"/>
+  <appender-ref ref="ASYNC_FILE"/>
+  <appender-ref ref="ASYNC_ERROR_FILE"/>
+  </root>
+  </configuration>

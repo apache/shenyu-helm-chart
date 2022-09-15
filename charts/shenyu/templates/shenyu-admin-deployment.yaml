@@ -3,9 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ template "shenyu.fullname" . }}-admin
+  name: {{ template "common.names.fullname" . }}-admin
   labels:
-    "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-admin'
+    "app.kubernetes.io/name": '{{ template "common.names.name" . }}-admin'
     "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
     "app.kubernetes.io/component": "shenyu-admin"
     "app.kubernetes.io/instance": "{{ .Release.Name }}"
@@ -18,11 +18,25 @@ spec:
   template:
     metadata:
       labels:
-        "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-admin'
+        "app.kubernetes.io/name": '{{ template "common.names.name" . }}-admin'
         "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
         "app.kubernetes.io/component": "shenyu-admin"
         "app.kubernetes.io/instance": "{{ .Release.Name }}"
     spec:
+      {{- if eq .Values.dataSource.active "mysql"}}
+      {{- $mysqlConnectorVersion := (required "once `dataSource.active` is set to mysql, `dataSource.mysql.connectorVersion` should not be empty" .Values.dataSource.mysql.connectorVersion)}}
+      initContainers:
+        - name: download-mysql-jar
+          image: busybox:1.35.0
+          command: [ "sh","-c","wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/{{$mysqlConnectorVersion}}/mysql-connector-java-{{$mysqlConnectorVersion}}.jar;
+                wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/{{$mysqlConnectorVersion}}/mysql-connector-java-{{.Values.dataSource.mysql.connectorVersion}}.jar.md5;
+                if [ $(md5sum mysql-connector-java-{{$mysqlConnectorVersion}}.jar | cut -d ' ' -f1) = $(cat mysql-connector-java-{{$mysqlConnectorVersion}}.jar.md5) ];
+                then echo success;
+                else echo failed;exit 1;fi;mv /mysql-connector-java-{{$mysqlConnectorVersion}}.jar /opt/shenyu-admin/ext-lib" ]
+          volumeMounts:
+            - name: mysql-connector-volume
+              mountPath: /opt/shenyu-admin/ext-lib
+      {{- end }}
       containers:
         - name: shenyu-admin
           image: {{ .Values.admin.image }}:{{ required "A valid .Values.version entry required!" .Values.version }}
@@ -32,30 +46,24 @@ spec:
           env:
             - name: 'TZ'
               value: 'Asia/Beijing'
-          {{- if eq .Values.dataSource.active "h2" }}
           volumeMounts:
           - name: shenyu-admin-config
-            mountPath: /opt/shenyu-admin/config/application-h2.yml
-            subPath: application-h2.yml
-          {{- end}}
+            mountPath: /opt/shenyu-admin/config
           {{- if eq .Values.dataSource.active "mysql" }}
-          volumeMounts:
-          - name: shenyu-admin-config
-            mountPath: /opt/shenyu-admin/config/application-mysql.yml
-            subPath: application-mysql.yml
-          - mountPath: /opt/shenyu-admin/ext-lib
-            name: mysql-connector-volume
+          - name: mysql-connector-volume
+            mountPath: /opt/shenyu-admin/ext-lib
           {{- end}}
       volumes:
         {{- if eq .Values.dataSource.active "mysql" }}
         - name: mysql-connector-volume
-          persistentVolumeClaim:
-            claimName: {{ template "shenyu.fullname" . }}-pvc
+          emptyDir: { }
         {{- end }}
         - name: shenyu-admin-config
           configMap:
-            name: {{ template "shenyu.fullname" . }}-configmap
+            name: {{ template "common.names.fullname" . }}-configmap
             items:
+            - key: application-admin.yml
+              path: application-admin.yml
             {{- if eq .Values.dataSource.active "mysql" }}
             - key: application-mysql.yml
               path: application-mysql.yml

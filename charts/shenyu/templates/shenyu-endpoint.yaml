@@ -3,7 +3,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ template "shenyu.fullname" . }}-mysql
+  name: {{ template "common.names.fullname" . }}-mysql
   namespace: {{ .Release.Namespace }}
 spec:
   ports:
@@ -14,7 +14,7 @@ spec:
 kind: Endpoints
 apiVersion: v1
 metadata:
-  name: {{ template "shenyu.fullname" . }}-mysql
+  name: {{ template "common.names.fullname" . }}-mysql
   namespace: {{ .Release.Namespace }}
 subsets:
 - addresses:

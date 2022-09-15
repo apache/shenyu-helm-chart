@@ -4,9 +4,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ template "shenyu.fullname" . }}-bootstrap
+  name: {{ template "common.names.fullname" . }}-bootstrap
   labels:
-    "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-bootstrap'
+    "app.kubernetes.io/name": '{{ template "common.names.name" . }}-bootstrap'
     "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
     "app.kubernetes.io/component": "shenyu-bootstrap"
     "app.kubernetes.io/instance": "{{ .Release.Name }}"
@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       labels:
-        "app.kubernetes.io/name": '{{ template "shenyu.name" . }}-bootstrap'
+        "app.kubernetes.io/name": '{{ template "common.names.name" . }}-bootstrap'
         "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
         "app.kubernetes.io/component": "shenyu-bootstrap"
         "app.kubernetes.io/instance": "{{ .Release.Name }}"
@@ -27,10 +27,10 @@ spec:
       volumes:
         - name: shenyu-bootstrap-config
           configMap:
-            name: {{ template "shenyu.fullname" . }}-configmap
+            name: {{ template "common.names.fullname" . }}-configmap
             items:
-              - key: application-local.yml
-                path: application-local.yml
+              - key: application-bootstrap.yml
+                path: application-bootstrap.yml
       containers:
         - name: shenyu-bootstrap
           image: {{ .Values.bootstrap.image }}:{{ required "A valid .Values.version entry required!" .Values.version }}
@@ -41,6 +41,5 @@ spec:
               value: Asia/Beijing
           volumeMounts:
             - name: shenyu-bootstrap-config
-              mountPath: /opt/shenyu-bootstrap/conf/application-local.yml
-              subPath: application-local.yml
+              mountPath: /opt/shenyu-bootstrap/conf
 {{- end -}}
