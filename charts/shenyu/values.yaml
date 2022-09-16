@@ -314,7 +314,7 @@ applicationConfig:
   admin:
     server:
       # Do not change this port, it is used by the Kubernetes service
-      port: 9195
+      port: 9095
       address: 0.0.0.0
 
     spring:
