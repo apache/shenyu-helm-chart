@@ -129,14 +129,14 @@ helm install shenyu shenyu/shenyu -n=shenyu --version=0.2.0 --create-namespace
 | dataSource.h2.password | string | `"sa"` | 密码   |
 
 #### MySQL
-| 配置项                             | 类型    | 默认值                   | 描述                                                                                               |
-|-----------------------------------|--------|-------------------------|---------------------------------------------------------------------------------------------------|
-| dataSource.mysql.ip               | string | `""`                    | IP                                                                                                |
-| dataSource.mysql.port             | int    | `3306`                  | 端口                                                                                               |
-| dataSource.mysql.username         | string | `"root"`                | 用户名                                                                                             |
-| dataSource.mysql.password         | string | `""`                    | 密码                                                                                               |
-| dataSource.mysql.connectorVersion | string | `"8.0.23"`              | connector 版本([maven connector 列表](https://repo1.maven.org/maven2/mysql/mysql-connector-java/)) |
-| dataSource.mysql.driverClass      | string | `"com.mysql.cj.Driver"` | mysql driver class 名字                                                                            |
+| 配置项                             | 类型    | 默认值                          | 描述                                                                                               |
+|-----------------------------------|--------|------------------------------|---------------------------------------------------------------------------------------------------|
+| dataSource.mysql.ip               | string | `""`                         | IP                                                                                                |
+| dataSource.mysql.port             | int    | `3306`                       | 端口                                                                                               |
+| dataSource.mysql.username         | string | `"root"`                     | 用户名                                                                                             |
+| dataSource.mysql.password         | string | `""`                         | 密码                                                                                               |
+| dataSource.mysql.connectorVersion | string | `"8.0.23"`                   | connector 版本([maven connector 列表](https://repo1.maven.org/maven2/mysql/mysql-connector-java/)) |
+| dataSource.mysql.driverClass      | string | `"com.mysql.cj.jdbc.Driver"` | mysql driver class 名字                                                                            |
 
 ### application.yml 配置
 | 配置项                       | 类型    | 默认值 | 描述                                                                                                                      |
