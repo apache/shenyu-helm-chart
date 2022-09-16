@@ -41,5 +41,6 @@ spec:
               value: Asia/Beijing
           volumeMounts:
             - name: shenyu-bootstrap-config
-              mountPath: /opt/shenyu-bootstrap/conf
+              mountPath: /opt/shenyu-bootstrap/conf/application.yml
+              subPath: application.yml
 {{- end -}}
