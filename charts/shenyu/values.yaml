@@ -7,12 +7,12 @@ replicas: 1
 admin:
   enabled: true
   image: apache/shenyu-admin
-  # if you want to change `server.port`, please edit here
+  # if you want to change "admin service port", please edit here
   nodePort: 31095
 bootstrap:
   enabled: true
   image: apache/shenyu-bootstrap
-  # if you want to change `server.port`, please edit here
+  # if you want to change "bootstrap service port", please edit here
   nodePort: 31195
 
 #################################################
