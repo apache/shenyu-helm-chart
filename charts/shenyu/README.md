@@ -58,6 +58,7 @@ helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
       --set dataSource.active=mysql \
       --set dataSource.mysql.ip=127.0.0.1 \
       --set dataSource.mysql.port=3306 \
+      --set dataSource.mysql.username=root
       --set dataSource.mysql.password=123456 \
 ```
 

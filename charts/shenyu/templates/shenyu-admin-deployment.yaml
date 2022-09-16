@@ -32,7 +32,7 @@ spec:
                 wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/{{$mysqlConnectorVersion}}/mysql-connector-java-{{.Values.dataSource.mysql.connectorVersion}}.jar.md5;
                 if [ $(md5sum mysql-connector-java-{{$mysqlConnectorVersion}}.jar | cut -d ' ' -f1) = $(cat mysql-connector-java-{{$mysqlConnectorVersion}}.jar.md5) ];
                 then echo success;
-                else echo failed;exit 1;fi;mv /mysql-connector-java-{{$mysqlConnectorVersion}}.jar /opt/shenyu-admin/ext-lib" ]
+                else echo failed;exit 1;fi;mv /mysql-connector-java-{{$mysqlConnectorVersion}}.jar /opt/shenyu-admin/ext-lib/mysql-connector.jar" ]
           volumeMounts:
             - name: mysql-connector-volume
               mountPath: /opt/shenyu-admin/ext-lib
@@ -53,6 +53,9 @@ spec:
           {{- if eq .Values.dataSource.active "mysql" }}
           - name: mysql-connector-volume
             mountPath: /opt/shenyu-admin/ext-lib
+          - name: shenyu-admin-config
+            mountPath: /opt/shenyu-admin/conf/application-mysql.yml
+            subPath: application-mysql.yml
           {{- end}}
       volumes:
         {{- if eq .Values.dataSource.active "mysql" }}
