@@ -15,8 +15,6 @@ helm repo update
 
 _See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation._
 
-todo: complete English version
-
 ---
 
 ## 使用Helm安装ShenYu
@@ -32,9 +30,16 @@ helm repo update
 ```
 
 ## 安装
-* helm 安装方式目前支持 h2 与 MySQL 两种数据库。默认使用 h2。
-* 默认同时安装 admin 与 bootstrap。
-* 使用 NodePort 暴露服务，admin 默认端口为 31095, bootstrap 为 31195。
+
+### 部署先决条件
+
+在阅读本文档前，你需要先阅读[部署先决条件](https://shenyu.apache.org/zh/docs/deployment/deployment-before)来完成部署 ShenYu 前的环境准备工作。
+
+### 说明
+
+* **安装应用**：默认同时安装 admin 与 bootstrap。
+* **服务暴露**：使用 NodePort 暴露服务，admin 默认端口为 31095, bootstrap 为 31195。
+* **数据库**：目前支持 h2 与 MySQL 两种数据库。默认使用 h2。
 
 ### h2 作为数据库
 
@@ -46,76 +51,34 @@ helm install shenyu shenyu/shenyu -n=shenyu --create-namespace
 
 ### MySQL 作为数据库
 
-MySQL 安装方式需要提前安装好 MySQ，并提前创建好 pv 以存放 connector。详见 [部署先决条件](https://shenyu.apache.org/zh/docs/deployment/deployment-before/)。
-
-#### 1. 提前创建 pv
-
-可复制以下 yaml，至少**替换以下两处内容**：
-
-* `YOUR_K8S_NODE_NAME`：存放 MySQL connector 的 K8s 节点名称
-* `YOUR_PATH_TO_STORE_MYSQL_CONNECTOR`：# 指定节点上的目录, 该目录下面需要包含 mysql-connector.jar
-
-```shell
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: shenyu-pv
-spec:
-  capacity:
-    storage: 1Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
-  storageClassName: shenyu-local-storage
-  local:
-    path: YOUR_PATH_TO_STORE_MYSQL_CONNECTOR
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - YOUR_K8S_NODE_NAME
----
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: shenyu-local-storage
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
-```
-
-修改并保存为 `shenyu-store.yaml`, 然后执行：
-
-```shell
-kubectl apply -f shenyu-store.yaml -n=shenyu
-```
-
-#### 2. 安装
-
 修改以下命令并复制，执行：
-
-其中，storageClass 和上面的 yaml 创建的 StorageClass 的 name 对应。
 
 ```shell
 helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
       --set dataSource.active=mysql \
       --set dataSource.mysql.ip=127.0.0.1 \
       --set dataSource.mysql.port=3306 \
+      --set dataSource.mysql.username=root
       --set dataSource.mysql.password=123456 \
-      --set dataSource.mysql.storageClass=shenyu-local-storage
 ```
 
 ## Q&A
 
-### 1. 如果只安装 admin 或 bootstrap
+### 1. 需要大量修改配置信息，如修改 application.yaml ，如何安装
+
+1. 下载完整 values.yaml
+* 最新 chart 版本：`helm show values shenyu/shenyu > values.yaml`
+* 特定 chart 版本, 如 `0.2.0`: `helm show values shenyu/shenyu --version=0.2.0 > values.yaml`
+2. 修改 values.yaml 文件
+3. 更改相应配置，使用 `-f values.yaml` 的格式执行 `helm install` 命令。
+如：`helm install shenyu shenyu/shenyu -n=shenyu --create-namespace -f values.yaml`
+
+### 2. 如何只安装 admin 或 bootstrap
 
 * 只安装 admin:     在 helm 安装命令末尾加上 `--set bootstrap.enabled=false`
 * 只安装 bootstrap: 在 helm 安装命令末尾加上 `--set admin.enabled=false`
 
-### 2. 如何安装旧版本 ShenYu
+### 3. 如何安装旧版本 ShenYu
 
 ```shell
 helm search repo shenyu -l
@@ -125,15 +88,59 @@ helm search repo shenyu -l
 
 ```shell
 NAME            CHART VERSION	APP VERSION	  DESCRIPTION
-shenyu/shenyu	2.4.3        	2.4.3      	  Helm Chart for deploying Apache ShenYu in Kuber...
+shenyu/shenyu   0.2.0           2.5.0         Helm Chart for deploying Apache ShenYu in Kubernetes
 ...
 ...
 ```
 
-其中 APP_VERSION 是 ShenYu 的版本，CHART_VERSION 是 helm chart 的版本。
+其中 `APP_VERSION` 是 ShenYu 的版本，`CHART_VERSION` 是 Helm Chart 的版本。
 
 根据要安装的 ShenYu 版本来选择对应的 Chart 版本，在命令末尾加上 `--version=CHART_VERSION` 参数即可。例如：
 
 ```shell
-helm install shenyu shenyu/shenyu -n=shenyu --version=2.4.3 --create-namespace
+helm install shenyu shenyu/shenyu -n=shenyu --version=0.2.0 --create-namespace
 ```
+
+## Values 配置说明
+
+### 全局配置
+| 配置项              | 类型    | 默认值                       | 描述                                   |
+|--------------------|--------|-----------------------------|---------------------------------------|
+| replicas           | int    | `1`                         | 副本数量                               |
+| version            | string | `"2.5.0"`                   | shenyu 版本，不建议修改，请直接安装对应版本 |
+| admin.enabled      | bool   | `true`                      | 是否安装 shenyu-admin                  |
+| admin.image        | string | `"apache/shenyu-admin"`     | shenyu-admin 镜像                      |
+| admin.nodePort     | int    | `31095`                     | shenyu-admin NodePort 端口             |
+| bootstrap.enabled  | bool   | `true`                      | 是否安装 shenyu-bootstrap              |
+| bootstrap.image    | string | `"apache/shenyu-bootstrap"` | shenyu-bootstrap 镜像                  |
+| bootstrap.nodePort | int    | `31195`                     | shenyu-bootstrap NodePort 端口         |
+
+### 数据库配置
+
+#### 数据库总配置
+| 配置项                  | 类型    | 默认值  | 描述                           |
+|------------------------|--------|--------|-------------------------------|
+| dataSource.active      | string | `"h2"` | 使用的数据库，支持 `h2`, `mysql` |
+| dataSource.initEnabled | bool   | `true` | 初始化数据库，仅 `h2` 有效       |
+
+#### h2
+| 配置项                  | 类型    | 默认值  | 描述   |
+|------------------------|--------|--------|-------|
+| dataSource.h2.username | string | `"sa"` | 用户名 |
+| dataSource.h2.password | string | `"sa"` | 密码   |
+
+#### MySQL
+| 配置项                             | 类型    | 默认值                          | 描述                                                                                               |
+|-----------------------------------|--------|------------------------------|---------------------------------------------------------------------------------------------------|
+| dataSource.mysql.ip               | string | `""`                         | IP                                                                                                |
+| dataSource.mysql.port             | int    | `3306`                       | 端口                                                                                               |
+| dataSource.mysql.username         | string | `"root"`                     | 用户名                                                                                             |
+| dataSource.mysql.password         | string | `""`                         | 密码                                                                                               |
+| dataSource.mysql.connectorVersion | string | `"8.0.23"`                   | connector 版本([maven connector 列表](https://repo1.maven.org/maven2/mysql/mysql-connector-java/)) |
+| dataSource.mysql.driverClass      | string | `"com.mysql.cj.jdbc.Driver"` | mysql driver class 名字                                                                            |
+
+### application.yml 配置
+| 配置项                       | 类型    | 默认值 | 描述                                                                                                                      |
+|-----------------------------|--------|-------|--------------------------------------------------------------------------------------------------------------------------|
+| applicationConfig.bootstrap | string | 略    | bootstrap 配置，[bootstrap 配置说明](https://shenyu.apache.org/zh/docs/user-guide/property-config/gateway-property-config) |
+| applicationConfig.admin     | string | 略    | admin 配置，[admin 配置说明](https://shenyu.apache.org/zh/docs/user-guide/property-config/admin-property-config)           |
