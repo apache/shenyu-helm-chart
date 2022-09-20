@@ -39,7 +39,7 @@ helm repo update
 
 * **安装应用**：默认同时安装 admin 与 bootstrap。
 * **服务暴露**：使用 NodePort 暴露服务，admin 默认端口为 31095, bootstrap 为 31195。
-* **数据库**：目前支持 h2 与 MySQL 两种数据库。默认使用 h2。
+* **数据库**：目前支持 h2, MySQL, PostgreSQL 作为数据库。默认使用 h2。
 
 ### h2 作为数据库
 
@@ -58,8 +58,21 @@ helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
       --set dataSource.active=mysql \
       --set dataSource.mysql.ip=127.0.0.1 \
       --set dataSource.mysql.port=3306 \
-      --set dataSource.mysql.username=root
-      --set dataSource.mysql.password=123456 \
+      --set dataSource.mysql.username=root \
+      --set dataSource.mysql.password=123456 
+```
+
+## PostgreSQL 作为数据库
+
+修改以下命令并复制，执行：
+
+```shell
+helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
+      --set dataSource.active=pg \
+      --set dataSource.pg.ip=127.0.0.1 \
+      --set dataSource.pg.port=5432 \
+      --set dataSource.pg.username=postgres \
+      --set dataSource.pg.password=123456
 ```
 
 ## Q&A

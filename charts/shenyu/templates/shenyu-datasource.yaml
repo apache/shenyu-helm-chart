@@ -1,0 +1,84 @@
+{{- if .Values.admin.enabled -}}
+{{ if eq .Values.dataSource.active "mysql" -}}
+############# MySQL Begin #############
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "common.names.fullname" . }}-mysql
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+    targetPort: {{ required "database.mysql.port is required" .Values.dataSource.mysql.port }}
+---
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: {{ template "common.names.fullname" . }}-mysql
+  namespace: {{ .Release.Namespace }}
+subsets:
+- addresses:
+  - ip: {{ required "database.mysql.ip is required" .Values.dataSource.mysql.ip }}
+  ports:
+  - port: {{ required "database.mysql.port is required" .Values.dataSource.mysql.port }}
+    name: mysql
+{{ end -}}
+
+---
+
+{{ if eq .Values.dataSource.active "pg" -}}
+############# PostgreSQL Begin #############
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "common.names.fullname" . }}-pg
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+    - port: 5432
+      name: pg
+      targetPort: {{ required "database.pg.port is required" .Values.dataSource.pg.port }}
+---
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: {{ template "common.names.fullname" . }}-pg
+  namespace: {{ .Release.Namespace }}
+subsets:
+  - addresses:
+      - ip: {{ required "database.pg.ip is required" .Values.dataSource.pg.ip }}
+    ports:
+      - port: {{ required "database.pg.port is required" .Values.dataSource.pg.port }}
+        name: pg
+{{ end -}}
+
+---
+
+{{ if eq .Values.dataSource.active "oracle" -}}
+############# Oracle Begin #############
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "common.names.fullname" . }}-oracle
+  namespace: {{ .Release.Namespace }}
+spec:
+    ports:
+    - port: 1521
+      name: oracle
+      targetPort: {{ required "database.oracle.port is required" .Values.dataSource.oracle.port }}
+---
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: {{ template "common.names.fullname" . }}-oracle
+  namespace: {{ .Release.Namespace }}
+subsets:
+- addresses:
+  - ip: {{ required "database.oracle.ip is required" .Values.dataSource.oracle.ip }}
+  ports:
+  - port: {{ required "database.oracle.port is required" .Values.dataSource.oracle.port }}
+    name: oracle
+{{ end -}}
+
+{{- end -}}

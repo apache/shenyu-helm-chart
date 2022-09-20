@@ -24,17 +24,55 @@ spec:
         "app.kubernetes.io/instance": "{{ .Release.Name }}"
     spec:
       {{- if eq .Values.dataSource.active "mysql"}}
-      {{- $mysqlConnectorVersion := (required "once `dataSource.active` is set to mysql, `dataSource.mysql.connectorVersion` should not be empty" .Values.dataSource.mysql.connectorVersion)}}
+      {{- $mysqlConnectorVersion := (required "once `dataSource.active` is set to 'mysql', `dataSource.mysql.connectorVersion` should not be empty" .Values.dataSource.mysql.connectorVersion)}}
       initContainers:
         - name: download-mysql-jar
           image: busybox:1.35.0
-          command: [ "sh","-c","wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/{{$mysqlConnectorVersion}}/mysql-connector-java-{{$mysqlConnectorVersion}}.jar;
-                wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/{{$mysqlConnectorVersion}}/mysql-connector-java-{{.Values.dataSource.mysql.connectorVersion}}.jar.md5;
+          command:
+            - "sh"
+            - "-c"
+            - "wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/{{$mysqlConnectorVersion}}/mysql-connector-java-{{$mysqlConnectorVersion}}.jar;
+                wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/{{$mysqlConnectorVersion}}/mysql-connector-java-{{$mysqlConnectorVersion}}.jar.md5;
                 if [ $(md5sum mysql-connector-java-{{$mysqlConnectorVersion}}.jar | cut -d ' ' -f1) = $(cat mysql-connector-java-{{$mysqlConnectorVersion}}.jar.md5) ];
                 then echo success;
-                else echo failed;exit 1;fi;mv /mysql-connector-java-{{$mysqlConnectorVersion}}.jar /opt/shenyu-admin/ext-lib/mysql-connector.jar" ]
+                else echo failed;exit 1;fi;mv /mysql-connector-java-{{$mysqlConnectorVersion}}.jar /opt/shenyu-admin/ext-lib/mysql-connector.jar"
           volumeMounts:
             - name: mysql-connector-volume
+              mountPath: /opt/shenyu-admin/ext-lib
+      {{- end }}
+      {{- if eq .Values.dataSource.active "pg"}}
+      {{- $pgConnectorVersion := (required "once `dataSource.active` is set to 'pg', `dataSource.pg.connectorVersion` should not be empty" .Values.dataSource.pg.connectorVersion)}}
+      initContainers:
+        - name: download-pg-jar
+          image: busybox:1.35.0
+          command:
+            - "sh"
+            - "-c"
+            - "wget https://repo1.maven.org/maven2/org/postgresql/postgresql/{{$pgConnectorVersion}}/postgresql-{{$pgConnectorVersion}}.jar;
+                wget https://repo1.maven.org/maven2/org/postgresql/postgresql/{{$pgConnectorVersion}}/postgresql-{{$pgConnectorVersion}}.jar.md5;
+                if [ $(md5sum postgresql-{{$pgConnectorVersion}}.jar | cut -d ' ' -f1) = $(cat postgresql-{{$pgConnectorVersion}}.jar.md5) ];
+                then echo success;
+                else echo failed;exit 1;fi;mv /postgresql-{{$pgConnectorVersion}}.jar /opt/shenyu-admin/ext-lib/postgresql-connector.jar"
+          volumeMounts:
+            - name: pg-connector-volume
+              mountPath: /opt/shenyu-admin/ext-lib
+      {{- end }}
+      # same as oracle
+      {{- if eq .Values.dataSource.active "oracle"}}
+      {{- $oracleConnectorVersion := (required "once `dataSource.active` is set to 'oracle', `dataSource.oracle.connectorVersion` should not be empty" .Values.dataSource.oracle.connectorVersion)}}
+      initContainers:
+        - name: download-oracle-jar
+          image: busybox:1.35.0
+          command:
+            - "sh"
+            - "-c"
+            - "wget https://repo1.maven.org/maven2/com/oracle/ojdbc/ojdbc8/{{$oracleConnectorVersion}}/ojdbc8-{{$oracleConnectorVersion}}.jar;
+                wget https://repo1.maven.org/maven2/com/oracle/ojdbc/ojdbc8/{{$oracleConnectorVersion}}/ojdbc8-{{$oracleConnectorVersion}}.jar.md5;
+                if [ $(md5sum ojdbc8-{{$oracleConnectorVersion}}.jar | cut -d ' ' -f1) = $(cat ojdbc8-{{$oracleConnectorVersion}}.jar.md5) ];
+                then echo success;
+                else echo failed;exit 1;fi;mv /ojdbc8-{{$oracleConnectorVersion}}.jar /opt/shenyu-admin/ext-lib/oracle-connector.jar"
+          volumeMounts:
+            - name: oracle-connector-volume
               mountPath: /opt/shenyu-admin/ext-lib
       {{- end }}
       containers:
@@ -57,9 +95,31 @@ spec:
             mountPath: /opt/shenyu-admin/conf/application-mysql.yml
             subPath: application-mysql.yml
           {{- end}}
+          {{- if eq .Values.dataSource.active "pg" }}
+          - name: pg-connector-volume
+            mountPath: /opt/shenyu-admin/ext-lib
+          - name: shenyu-admin-config
+            mountPath: /opt/shenyu-admin/conf/application-pg.yml
+            subPath: application-pg.yml
+          {{- end}}
+          {{- if eq .Values.dataSource.active "oracle" }}
+          - name: oracle-connector-volume
+            mountPath: /opt/shenyu-admin/ext-lib
+          - name: shenyu-admin-config
+            mountPath: /opt/shenyu-admin/conf/application-oracle.yml
+            subPath: application-oracle.yml
+          {{- end}}
       volumes:
         {{- if eq .Values.dataSource.active "mysql" }}
         - name: mysql-connector-volume
+          emptyDir: { }
+        {{- end }}
+        {{- if eq .Values.dataSource.active "pg" }}
+        - name: pg-connector-volume
+          emptyDir: { }
+        {{- end }}
+        {{- if eq .Values.dataSource.active "oracle" }}
+        - name: oracle-connector-volume
           emptyDir: { }
         {{- end }}
         - name: shenyu-admin-config
@@ -68,13 +128,20 @@ spec:
             items:
             - key: application-admin.yml
               path: application.yml
-            {{- if eq .Values.dataSource.active "mysql" }}
-            - key: application-mysql.yml
-              path: application-mysql.yml
-            {{- end }}
             {{- if eq .Values.dataSource.active "h2" }}
             - key: application-h2.yml
               path: application-h2.yml
             {{- end }}
-
+            {{- if eq .Values.dataSource.active "mysql" }}
+            - key: application-mysql.yml
+              path: application-mysql.yml
+            {{- end }}
+            {{- if eq .Values.dataSource.active "pg" }}
+            - key: application-pg.yml
+              path: application-pg.yml
+            {{- end }}
+            {{- if eq .Values.dataSource.active "oracle" }}
+            - key: application-oracle.yml
+              path: application-oracle.yml
+            {{- end }}
 {{- end -}}

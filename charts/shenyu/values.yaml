@@ -20,7 +20,7 @@ bootstrap:
 #################################################
 
 dataSource:
-  # options: [h2, mysql]
+  # options: [h2, mysql, pg]
   active: h2
   # init database and tables
   initEnabled: true
@@ -37,6 +37,22 @@ dataSource:
     # mysql6-8 : com.mysql.cj.jdbc.Driver
     driverClass: com.mysql.cj.jdbc.Driver
     connectorVersion: 8.0.23
+  pg:
+    ip:
+    port: 5432
+    username: postgres
+    password:
+    # pg driver class name
+    driverClass: org.postgresql.Driver
+    connectorVersion: 42.5.0
+  oracle:
+    ip:
+    port: 1521
+    username: root
+    password:
+    # oracle driver class name
+    driverClass: oracle.jdbc.OracleDriver
+    connectorVersion: 19.3.0.0
 
 #################################################
 #     application.yml of admin and bootstrap    #

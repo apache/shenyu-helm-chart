@@ -40,3 +40,34 @@ data:
         password: {{ required "`dataSource.mysql.password` is required" .Values.dataSource.mysql.password }}
         driver-class-name: {{ .Values.dataSource.mysql.driverClass }}
   {{- end }}
+  {{- if eq .Values.dataSource.active "pg" }}
+  application-pg.yml: |-
+    shenyu:
+      database:
+        dialect: postgresql
+        init_enable: true
+
+    spring:
+      datasource:
+        url: jdbc:postgresql://{{ template "common.names.fullname" . }}-pg.shenyu.svc.cluster.local:5432/shenyu
+        username: postgres
+        password: 123456
+        driver-class-name: org.postgresql.Driver
+
+    mybatis:
+      type-handlers-package: org.apache.shenyu.admin.mybatis.pg.handler
+  {{- end }}
+  {{- if eq .Values.dataSource.active "oracle" }}
+  application-oracle.yml: |-
+    shenyu:
+      database:
+        dialect: oracle
+        init_enable: true
+
+    spring:
+      datasource:
+        url: jdbc:oracle:thin:@{{ template "common.names.fullname" . }}-oracle.shenyu.svc.cluster.local:1521/shenyu
+        username: root
+        password: 123456
+        driver-class-name: oracle.jdbc.OracleDriver
+  {{- end}}
