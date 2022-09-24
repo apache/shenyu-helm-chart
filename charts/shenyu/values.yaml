@@ -351,7 +351,7 @@ applicationConfig:
         websocket:
           enabled: true
           messageMaxSize: 10240
-          allowOrigins: ws://{{ template "common.names.fullname" . }}-admin.shenyu.svc.cluster.local:9095;{{ template "common.names.fullname" . }}-bootstrap.shenyu.svc.cluster.local:9195;
+          allowOrigins: ws://{{ template "common.names.fullname" . }}-admin.shenyu.svc.cluster.local:9095;ws://{{ template "common.names.fullname" . }}-bootstrap.shenyu.svc.cluster.local:9195;
       #      zookeeper:
       #        url: localhost:2181
       #        sessionTimeout: 5000
