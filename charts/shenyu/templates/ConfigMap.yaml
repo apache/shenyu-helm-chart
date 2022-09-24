@@ -23,8 +23,8 @@ data:
     spring:
       datasource:
         url: jdbc:h2:mem:~/shenyu;DB_CLOSE_DELAY=-1;MODE=MySQL;
-        username: {{ .Values.dataSource.h2.username }}
-        password: {{ .Values.dataSource.h2.password }}
+        username: {{ required ".dataSource.h2.username is required" .Values.dataSource.h2.username }}
+        password: {{ required ".dataSource.h2.password is required" .Values.dataSource.h2.password }}
         driver-class-name: org.h2.Driver
   {{- end }}
   {{- if eq .Values.dataSource.active "mysql" }}
@@ -36,7 +36,7 @@ data:
     spring:
       datasource:
         url: jdbc:mysql://{{ template "common.names.fullname" . }}-mysql.shenyu.svc.cluster.local:3306/shenyu?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
-        username: {{ .Values.dataSource.mysql.username }}
+        username: {{ required ".dataSource.mysql.username is required" .Values.dataSource.mysql.username }}
         password: {{ required "`dataSource.mysql.password` is required" .Values.dataSource.mysql.password }}
         driver-class-name: {{ .Values.dataSource.mysql.driverClass }}
   {{- end }}
@@ -50,8 +50,8 @@ data:
     spring:
       datasource:
         url: jdbc:postgresql://{{ template "common.names.fullname" . }}-pg.shenyu.svc.cluster.local:5432/shenyu
-        username: postgres
-        password: 123456
+        username: {{ required ".dataSource.pg.username is required" .Values.dataSource.pg.username }}
+        password: {{ required "`dataSource.pg.password` is required" .Values.dataSource.pg.password }}
         driver-class-name: org.postgresql.Driver
 
     mybatis:
@@ -67,7 +67,7 @@ data:
     spring:
       datasource:
         url: jdbc:oracle:thin:@{{ template "common.names.fullname" . }}-oracle.shenyu.svc.cluster.local:1521/shenyu
-        username: root
-        password: 123456
+        username: {{ required ".dataSource.oracle.username is required" .Values.dataSource.oracle.username }}
+        password: {{ required "`dataSource.oracle.password` is required" .Values.dataSource.oracle.password }}
         driver-class-name: oracle.jdbc.OracleDriver
   {{- end}}

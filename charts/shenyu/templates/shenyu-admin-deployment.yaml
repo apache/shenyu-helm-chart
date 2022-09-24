@@ -23,6 +23,9 @@ spec:
         "app.kubernetes.io/component": "shenyu-admin"
         "app.kubernetes.io/instance": "{{ .Release.Name }}"
     spec:
+      {{/* check if database type is valid */}}
+      {{- $dataSourceTypeValid := has .Values.dataSource.active (list "h2" "mysql" "pg") -}}
+      {{- if not $dataSourceTypeValid -}}{{- required "Invalid `.dataSource.active`. Must be one of h2, mysql, pg" "" -}}{{- end}}
       {{- if eq .Values.dataSource.active "mysql"}}
       {{- $mysqlConnectorVersion := (required "once `dataSource.active` is set to 'mysql', `dataSource.mysql.connectorVersion` should not be empty" .Values.dataSource.mysql.connectorVersion)}}
       initContainers:
