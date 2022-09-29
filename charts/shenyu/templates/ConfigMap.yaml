@@ -45,14 +45,14 @@ data:
     shenyu:
       database:
         dialect: postgresql
-        init_enable: true
+        init_enable: {{ .Values.dataSource.initEnabled }}
 
     spring:
       datasource:
         url: jdbc:postgresql://{{ template "common.names.fullname" . }}-pg.shenyu.svc.cluster.local:5432/shenyu
         username: {{ required ".dataSource.pg.username is required" .Values.dataSource.pg.username }}
         password: {{ required "`dataSource.pg.password` is required" .Values.dataSource.pg.password }}
-        driver-class-name: org.postgresql.Driver
+        driver-class-name: {{ .Values.dataSource.pg.driverClass }}
 
     mybatis:
       type-handlers-package: org.apache.shenyu.admin.mybatis.pg.handler
@@ -62,7 +62,7 @@ data:
     shenyu:
       database:
         dialect: oracle
-        init_enable: true
+        init_enable: {{ .Values.dataSource.initEnabled }}
 
     spring:
       datasource:
