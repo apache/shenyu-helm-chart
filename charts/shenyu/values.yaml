@@ -234,14 +234,14 @@ applicationConfig:
         maxSize: 10
       sync:
         websocket:
-          urls: ws://{{ template "common.names.fullname" . }}-admin.shenyu.svc.cluster.local:9095/websocket
-          allowOrigin: ws://{{ template "common.names.fullname" . }}-bootstrap.shenyu.svc.cluster.local:9195
+          urls: ws://{{ template "common.names.fullname" . }}-admin.{{.Release.Namespace}}.svc.cluster.local:9095/websocket
+          allowOrigin: ws://{{ template "common.names.fullname" . }}-bootstrap.{{.Release.Namespace}}.svc.cluster.local:9195
       #    zookeeper:
       #      url: localhost:2181
       #      sessionTimeout: 5000
       #      connectionTimeout: 2000
       #    http:
-      #      url: http://{{ template "common.names.fullname" . }}-admin.shenyu.svc.cluster.local:9095
+      #      url: http://{{ template "common.names.fullname" . }}-admin.{{.Release.Namespace}}.svc.cluster.local:9095
       #      username:
       #      password:
       #    nacos:
@@ -367,7 +367,7 @@ applicationConfig:
         websocket:
           enabled: true
           messageMaxSize: 10240
-          allowOrigins: ws://{{ template "common.names.fullname" . }}-admin.shenyu.svc.cluster.local:9095;ws://{{ template "common.names.fullname" . }}-bootstrap.shenyu.svc.cluster.local:9195;
+          allowOrigins: ws://{{ template "common.names.fullname" . }}-admin.{{.Release.Namespace}}.svc.cluster.local:9095;ws://{{ template "common.names.fullname" . }}-bootstrap.{{.Release.Namespace}}.svc.cluster.local:9195;
       #      zookeeper:
       #        url: localhost:2181
       #        sessionTimeout: 5000
