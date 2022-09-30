@@ -46,7 +46,7 @@ helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
       --set dataSource.mysql.password=123456 
 ```
 
-## PostgreSQL as database
+## PostgreSQL as database(Version of ShenYu > 2.5.0)
 
 Modify the following command and copy it to execute.
 
@@ -199,7 +199,7 @@ helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
       --set dataSource.mysql.password=123456 
 ```
 
-## PostgreSQL 作为数据库
+## PostgreSQL 作为数据库(ShenYu 版本 > 2.5.0)
 
 修改以下命令并复制，执行：
 
