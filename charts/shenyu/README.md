@@ -101,56 +101,56 @@ helm install shenyu shenyu/shenyu -n=shenyu --version=0.2.0 --create-namespace
 ## Values configuration instructions
 
 ### Global Configuration
-| configuration-item | type | default | description |
-| --------------------|--------|-----------------------------|---------------------------------------|
-| replicas | int | `1` | Number of replicas |
-| version | string | `"2.5.0"` | shenyu version, it is not recommended to modify, please install the corresponding version directly |
-| admin.enabled | bool | `true` | Whether to install shenyu-admin |
-| admin.image | string | `"apache/shenyu-admin"` | shenyu-admin image |
-| admin.nodePort | int | `31095` | shenyu-admin NodePort |
-| bootstrap.enabled | bool | `true` | whether to install shenyu-bootstrap |
-| bootstrap.image | string | `"apache/shenyu-bootstrap"` | shenyu-bootstrap image |
-| bootstrap.nodePort | int | `31195` | shenyu-bootstrap NodePort |
+| configuration-item | type   | default                     | description                                                                                        |
+|--------------------|--------|-----------------------------|----------------------------------------------------------------------------------------------------|
+| replicas           | int    | `1`                         | Number of replicas                                                                                 |
+| version            | string | `"2.5.0"`                   | shenyu version, it is not recommended to modify, please install the corresponding version directly |
+| admin.enabled      | bool   | `true`                      | Whether to install shenyu-admin                                                                    |
+| admin.image        | string | `"apache/shenyu-admin"`     | shenyu-admin image                                                                                 |
+| admin.nodePort     | int    | `31095`                     | shenyu-admin NodePort                                                                              |
+| bootstrap.enabled  | bool   | `true`                      | whether to install shenyu-bootstrap                                                                |
+| bootstrap.image    | string | `"apache/shenyu-bootstrap"` | shenyu-bootstrap image                                                                             |
+| bootstrap.nodePort | int    | `31195`                     | shenyu-bootstrap NodePort                                                                          |
 
 ### Database configuration
 
 #### General database configuration
-| configuration-item | type | default | description |
-| ------------------------|--------|--------|-------------------------------|
-| dataSource.active | string | `"h2"` | Database to use, supports `h2`, `mysql` |
-| dataSource.initEnabled | bool | `true` | Initialize the database, only `h2` is available |
+| configuration-item     | type   | default | description                                     |
+|------------------------|--------|---------|-------------------------------------------------|
+| dataSource.active      | string | `"h2"`  | Database to use, supports `h2`, `mysql`         |
+| dataSource.initEnabled | bool   | `true`  | Initialize the database, only `h2` is available |
 
 #### h2
-| configuration item | type | default | description |
-| ------------------------|--------|--------|-------|
-| dataSource.h2.username | string | `"sa"` | username |
-| dataSource.h2.password | string | `"sa"` | password |
+| configuration item     | type   | default | description |
+|------------------------|--------|---------|-------------|
+| dataSource.h2.username | string | `"sa"`  | username    |
+| dataSource.h2.password | string | `"sa"`  | password    |
 
 #### MySQL
-| Configuration Item | Type | Default | Description |
-|-----------------------------------|--------|------------------------------|----------------------------------------------------- ----------------------------------------------|
-| dataSource.mysql.ip | string | `""` | IP | dataSource.mysql.port | int
-| dataSource.mysql.port | int | `3306` | port |
-| dataSource.mysql.username | string | `"root"` | Username |
-| dataSource.mysql.password | string | `""` | Password |
-| dataSource.mysql.driverClass | string | `"com.mysql.cj.jdbc.Driver"` | mysql driver class name |
-| dataSource.mysql.connectorVersion | string | `"8.0.23"` | connector version([maven connector list](https://repo1.maven.org/maven2/mysql/mysql- connector-java/)) |
+| Configuration Item                | Type   | Default                      | Description                                                                                            |
+|-----------------------------------|--------|------------------------------|--------------------------------------------------------------------------------------------------------|
+| dataSource.mysql.ip               | string | `""`                         | IP                                                                                                     |
+| dataSource.mysql.port             | int    | `3306`                       | port                                                                                                   |
+| dataSource.mysql.username         | string | `"root"`                     | Username                                                                                               |
+| dataSource.mysql.password         | string | `""`                         | Password                                                                                               |
+| dataSource.mysql.driverClass      | string | `"com.mysql.cj.jdbc.Driver"` | mysql driver class name                                                                                |
+| dataSource.mysql.connectorVersion | string | `"8.0.23"`                   | connector version([maven connector list](https://repo1.maven.org/maven2/mysql/mysql- connector-java/)) |
 
 ### PostgreSQL
-| configuration-item | type | default | description |
-|-----------------------------------|--------|------------------------------|----------------------------------------------------- ----------------------------------------------|
-| dataSource.postgresql.ip | string | `""` | IP |
-| dataSource.postgresql.port | int | `5432` | port |
-| dataSource.postgresql.username | string | `"postgres"` | username |
-| dataSource.postgresql.password | string | `"postgres"` | password |
-| dataSource.postgresql.driverClass | string | `"org.postgresql.Driver"` | postgresql driver class name |
-| dataSource.postgresql.connectorVersion | string | `"42.2.18"` | connector version ([maven connector list](https://repo1.maven.org/maven2/org/ postgresql/postgresql/)) |
+| configuration-item                     | type   | default                   | description                                                                                            |
+|----------------------------------------|--------|---------------------------|--------------------------------------------------------------------------------------------------------|
+| dataSource.postgresql.ip               | string | `""`                      | IP                                                                                                     |
+| dataSource.postgresql.port             | int    | `5432`                    | port                                                                                                   |
+| dataSource.postgresql.username         | string | `"postgres"`              | username                                                                                               |
+| dataSource.postgresql.password         | string | `"postgres"`              | password                                                                                               |
+| dataSource.postgresql.driverClass      | string | `"org.postgresql.Driver"` | postgresql driver class name                                                                           |
+| dataSource.postgresql.connectorVersion | string | `"42.2.18"`               | connector version ([maven connector list](https://repo1.maven.org/maven2/org/ postgresql/postgresql/)) |
 
 ### application.yml configuration
-| configuration-item | type | default | description |
-|-----------------------------|--------|-------|---------------------------------------------------------------------------------- ----------------------------------------|
+| configuration-item          | type   | default  | description                                                                                                                                           |
+|-----------------------------|--------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | applicationConfig.bootstrap | string | slightly | bootstrap configuration, [bootstrap configuration description](https://shenyu.apache.org/zh/docs/user-guide/property-config/ gateway-property-config) |
-| applicationConfig.admin | string | omit | admin configuration, [admin configuration description](https://shenyu.apache.org/zh/docs/user-guide/property-config/admin-property- config) |
+| applicationConfig.admin     | string | omit     | admin configuration, [admin configuration description](https://shenyu.apache.org/zh/docs/user-guide/property-config/admin-property- config)           |
 
 ---
 
@@ -280,7 +280,7 @@ helm install shenyu shenyu/shenyu -n=shenyu --version=0.2.0 --create-namespace
 | dataSource.h2.password | string | `"sa"` | 密码   |
 
 #### MySQL
-| 配置项                             | 类型    | 默认值                          | 描述                                                                                               |
+| 配置项                             | 类型    | 默认值                        | 描述                                                                                               |
 |-----------------------------------|--------|------------------------------|---------------------------------------------------------------------------------------------------|
 | dataSource.mysql.ip               | string | `""`                         | IP                                                                                                |
 | dataSource.mysql.port             | int    | `3306`                       | 端口                                                                                               |
@@ -290,14 +290,14 @@ helm install shenyu shenyu/shenyu -n=shenyu --version=0.2.0 --create-namespace
 | dataSource.mysql.connectorVersion | string | `"8.0.23"`                   | connector 版本([maven connector 列表](https://repo1.maven.org/maven2/mysql/mysql-connector-java/)) |
 
 ### PostgreSQL
-| 配置项                             | 类型    | 默认值                          | 描述                                                                                               |
-|-----------------------------------|--------|------------------------------|---------------------------------------------------------------------------------------------------|
-| dataSource.postgresql.ip               | string | `""`                         | IP                                                                                                |
-| dataSource.postgresql.port             | int    | `5432`                       | 端口                                                                                               |
-| dataSource.postgresql.username         | string | `"postgres"`                     | 用户名                                                                                             |
-| dataSource.postgresql.password         | string | `""`                         | 密码                                                                                               |
-| dataSource.postgresql.driverClass      | string | `"org.postgresql.Driver"` | postgresql driver class 名字                                                                            |
-| dataSource.postgresql.connectorVersion | string | `"42.2.18"`                   | connector 版本([maven connector 列表](https://repo1.maven.org/maven2/org/postgresql/postgresql/)) |
+| 配置项                                  | 类型    | 默认值                     | 描述                                                                                              |
+|----------------------------------------|--------|---------------------------|--------------------------------------------------------------------------------------------------|
+| dataSource.postgresql.ip               | string | `""`                      | IP                                                                                               |
+| dataSource.postgresql.port             | int    | `5432`                    | 端口                                                                                              |
+| dataSource.postgresql.username         | string | `"postgres"`              | 用户名                                                                                            |
+| dataSource.postgresql.password         | string | `""`                      | 密码                                                                                              |
+| dataSource.postgresql.driverClass      | string | `"org.postgresql.Driver"` | postgresql driver class 名字                                                                      |
+| dataSource.postgresql.connectorVersion | string | `"42.2.18"`               | connector 版本([maven connector 列表](https://repo1.maven.org/maven2/org/postgresql/postgresql/)) |
 
 ### application.yml 配置
 | 配置项                       | 类型    | 默认值 | 描述                                                                                                                      |
