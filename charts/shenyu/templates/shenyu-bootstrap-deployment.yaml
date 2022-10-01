@@ -40,7 +40,7 @@ spec:
             - name: TZ
               value: Asia/Beijing
             - name: JAVA_OPTS
-              value: {{ default "" .Values.bootstrap.javaOpts | quote }}
+              value: {{ .Values.bootstrap.javaOpts | quote }}
           resources:
             {{- toYaml .Values.bootstrap.resources | nindent 12 }}
           volumeMounts:

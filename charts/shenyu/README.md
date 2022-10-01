@@ -123,18 +123,18 @@ helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
 | version            | string | `"2.5.0"` | shenyu version, it is not recommended to modify, please install the corresponding version directly |
 
 ### shenyu-admin configuration
-| admin.enabled   | bool   | `true`  | whether to install admin |
-|-----------------|--------|---------|--------------------------|
-| admin.nodePort  | int    | `31095` | NodePort port            |
-| admin.javaOpts  | string | `""`    | JVM parameters           |
-| admin.resources | dict   | omit    | K8s resource quota       |
+| admin.enabled   | bool   | `true`                  | whether to install admin |
+|-----------------|--------|-------------------------|--------------------------|
+| admin.nodePort  | int    | `31095`                 | NodePort port            |
+| admin.javaOpts  | string | `"-Xms1024m -Xmx2048m"` | JVM parameters           |
+| admin.resources | dict   | omit                    | K8s resource quota       |
 
 ### shenyu-bootstrap configuration
-| bootstrap.enabled   | bool   | `true`  | whether to install bootstrap |
-|---------------------|--------|---------|------------------------------|
-| bootstrap.nodePort  | int    | `31195` | NodePort Port                |
-| bootstrap.javaOpts  | string | `""`    | JVM parameters               |
-| bootstrap.resources | dict   | `{}`    | K8s resource quota           |
+| bootstrap.enabled   | bool   | `true`                  | whether to install bootstrap |
+|---------------------|--------|-------------------------|------------------------------|
+| bootstrap.nodePort  | int    | `31195`                 | NodePort Port                |
+| bootstrap.javaOpts  | string | `"-Xms1024m -Xmx2048m"` | JVM parameters               |
+| bootstrap.resources | dict   | `{}`                    | K8s resource quota           |
 
 Translated with www.DeepL.com/Translator (free version)                                                                     |
 
