@@ -98,19 +98,45 @@ Select the corresponding Chart version according to the version of ShenYu you wa
 helm install shenyu shenyu/shenyu -n=shenyu --version=0.2.0 --create-namespace
 ```
 
+### How to configure JVM options and modify Kubernetes resource quotas
+
+* Configure JVM parameters via `admin.jvmOpts` and `bootstrap.jvmOpts`
+* Configure Kubernetes resource quotas via `admin.resources` and `bootstrap.resources`.
+
+e.g.
+
+```shell
+helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
+      --set admin.javaOpts="-Xms256m -Xmx512m" \
+      --set admin.resources.requests.memory=512Mi \
+      --set admin.resources.limits.memory=1Gi \
+      --set admin.resources.requests.cpu=500m \
+      --set admin.resources.limits.cpu=1 \
+```
+
 ## Values configuration instructions
 
 ### Global Configuration
-| configuration-item | type   | default                     | description                                                                                        |
-|--------------------|--------|-----------------------------|----------------------------------------------------------------------------------------------------|
-| replicas           | int    | `1`                         | Number of replicas                                                                                 |
-| version            | string | `"2.5.0"`                   | shenyu version, it is not recommended to modify, please install the corresponding version directly |
-| admin.enabled      | bool   | `true`                      | Whether to install shenyu-admin                                                                    |
-| admin.image        | string | `"apache/shenyu-admin"`     | shenyu-admin image                                                                                 |
-| admin.nodePort     | int    | `31095`                     | shenyu-admin NodePort                                                                              |
-| bootstrap.enabled  | bool   | `true`                      | whether to install shenyu-bootstrap                                                                |
-| bootstrap.image    | string | `"apache/shenyu-bootstrap"` | shenyu-bootstrap image                                                                             |
-| bootstrap.nodePort | int    | `31195`                     | shenyu-bootstrap NodePort                                                                          |
+| configuration item | type   | default   | description                                                                                        |
+|--------------------|--------|-----------|----------------------------------------------------------------------------------------------------|
+| replicas           | int    | `1`       | Number of replicas                                                                                 |
+| version            | string | `"2.5.0"` | shenyu version, it is not recommended to modify, please install the corresponding version directly |
+
+### shenyu-admin configuration
+| admin.enabled   | bool   | `true`  | whether to install admin |
+|-----------------|--------|---------|--------------------------|
+| admin.nodePort  | int    | `31095` | NodePort port            |
+| admin.javaOpts  | string | `""`    | JVM parameters           |
+| admin.resources | dict   | omit    | K8s resource quota       |
+
+### shenyu-bootstrap configuration
+| bootstrap.enabled   | bool   | `true`  | whether to install bootstrap |
+|---------------------|--------|---------|------------------------------|
+| bootstrap.nodePort  | int    | `31195` | NodePort Port                |
+| bootstrap.javaOpts  | string | `""`    | JVM parameters               |
+| bootstrap.resources | dict   | `{}`    | K8s resource quota           |
+
+Translated with www.DeepL.com/Translator (free version)                                                                     |
 
 ### Database configuration
 
@@ -251,19 +277,43 @@ shenyu/shenyu   0.2.0           2.5.0         Helm Chart for deploying Apache Sh
 helm install shenyu shenyu/shenyu -n=shenyu --version=0.2.0 --create-namespace
 ```
 
+### 如何配置 JVM 参数以及修改 Kubernetes 资源配额
+
+* 通过 `admin.javaOpts` 和 `bootstrap.javaOpts` 来配置 JVM 参数
+* 通过 `admin.resources` 和 `bootstrap.resources` 来配置 Kubernetes 资源配额。
+
+例：
+
+```shell
+helm install shenyu shenyu/shenyu -n=shenyu --create-namespace \
+      --set admin.javaOpts="-Xms256m -Xmx512m" \
+      --set admin.resources.requests.memory=512Mi \
+      --set admin.resources.limits.memory=1Gi \
+      --set admin.resources.requests.cpu=500m \
+      --set admin.resources.limits.cpu=1 \
+```
+
 ## Values 配置说明
 
 ### 全局配置
-| 配置项              | 类型    | 默认值                       | 描述                                   |
-|--------------------|--------|-----------------------------|---------------------------------------|
-| replicas           | int    | `1`                         | 副本数量                               |
-| version            | string | `"2.5.0"`                   | shenyu 版本，不建议修改，请直接安装对应版本 |
-| admin.enabled      | bool   | `true`                      | 是否安装 shenyu-admin                  |
-| admin.image        | string | `"apache/shenyu-admin"`     | shenyu-admin 镜像                      |
-| admin.nodePort     | int    | `31095`                     | shenyu-admin NodePort 端口             |
-| bootstrap.enabled  | bool   | `true`                      | 是否安装 shenyu-bootstrap              |
-| bootstrap.image    | string | `"apache/shenyu-bootstrap"` | shenyu-bootstrap 镜像                  |
-| bootstrap.nodePort | int    | `31195`                     | shenyu-bootstrap NodePort 端口         |
+| 配置项    | 类型    | 默认值     | 描述                                   |
+|----------|--------|-----------|---------------------------------------|
+| replicas | int    | `1`       | 副本数量                               |
+| version  | string | `"2.5.0"` | shenyu 版本，不建议修改，请直接安装对应版本 |
+
+### shenyu-admin 配置
+| admin.enabled   | bool   | `true`  | 是否安装 admin |
+|-----------------|--------|---------|---------------|
+| admin.nodePort  | int    | `31095` | NodePort 端口  |
+| admin.javaOpts  | string | `""`    | JVM 参数       |
+| admin.resources | dict   | 略      | K8s 资源配额   |
+
+### shenyu-bootstrap 配置
+| bootstrap.enabled   | bool   | `true`  | 是否安装 bootstrap |
+|---------------------|--------|---------|-------------------|
+| bootstrap.nodePort  | int    | `31195` | NodePort 端口      |
+| bootstrap.javaOpts  | string | `""`    | JVM 参数           |
+| bootstrap.resources | dict   | `{}`    | K8s 资源配额       |
 
 ### 数据库配置
 
