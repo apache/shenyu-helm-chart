@@ -10,7 +10,7 @@ admin:
   # if you want to change "admin service port", please edit here
   nodePort: 31095
   # jvm args for admin
-  javaOpts: "-Xms1024m -Xmx2048m"
+  javaOpts: ""
   # K8s resources quota for admin
   resources:
 #    requests:
@@ -25,7 +25,7 @@ bootstrap:
   # if you want to change "bootstrap service port", please edit here
   nodePort: 31195
   # jvm args for bootstrap
-  javaOpts: "-Xms1024m -Xmx2048m"
+  javaOpts: ""
   # K8s resources quota for bootstrap
   resources:
 #    requests:

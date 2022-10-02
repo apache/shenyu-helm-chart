@@ -88,7 +88,7 @@ spec:
           env:
             - name: 'TZ'
               value: 'Asia/Beijing'
-            - name: JAVA_OPTS
+            - name: ADMIN_JVM
               value: {{ .Values.admin.javaOpts | quote }}
           resources:
             {{- toYaml .Values.admin.resources | nindent 12 }}

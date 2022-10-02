@@ -39,7 +39,7 @@ spec:
           env:
             - name: TZ
               value: Asia/Beijing
-            - name: JAVA_OPTS
+            - name: BOOT_JVM
               value: {{ .Values.bootstrap.javaOpts | quote }}
           resources:
             {{- toYaml .Values.bootstrap.resources | nindent 12 }}
