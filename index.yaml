@@ -3,6 +3,26 @@ entries:
   shenyu:
   - apiVersion: v2
     appVersion: 2.5.0
+    created: "2022-10-04T06:34:57.116620921Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.x.x
+    description: Helm Chart for deploying Apache ShenYu in Kubernetes
+    digest: e961bb3038f5845f0d99c5940f8900c7f45da4518fae922d8832bf3f5337258f
+    icon: https://shenyu.apache.org/img/logo.png
+    maintainers:
+    - email: wannengdek@gmail.com
+      name: erdengk
+    - email: aflybird0@gmail.com
+      name: aFlyBird0
+    name: shenyu
+    type: application
+    urls:
+    - https://github.com/apache/shenyu-helm-chart/releases/download/shenyu-0.3.1/shenyu-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v2
+    appVersion: 2.5.0
     created: "2022-09-24T11:55:17.578115992Z"
     dependencies:
     - name: common
@@ -56,4 +76,4 @@ entries:
     urls:
     - https://github.com/apache/shenyu-helm-chart/releases/download/shenyu-0.1.1/shenyu-0.1.1.tgz
     version: 0.1.1
-generated: "2022-09-24T11:55:17.578127992Z"
+generated: "2022-10-04T06:34:57.116638921Z"
