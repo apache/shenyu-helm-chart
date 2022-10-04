@@ -39,6 +39,10 @@ spec:
           env:
             - name: TZ
               value: Asia/Beijing
+            - name: BOOT_JVM
+              value: {{ .Values.bootstrap.javaOpts | quote }}
+          resources:
+            {{- toYaml .Values.bootstrap.resources | nindent 12 }}
           volumeMounts:
             - name: shenyu-bootstrap-config
               mountPath: /opt/shenyu-bootstrap/conf/application.yml

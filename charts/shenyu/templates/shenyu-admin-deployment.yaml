@@ -88,6 +88,10 @@ spec:
           env:
             - name: 'TZ'
               value: 'Asia/Beijing'
+            - name: ADMIN_JVM
+              value: {{ .Values.admin.javaOpts | quote }}
+          resources:
+            {{- toYaml .Values.admin.resources | nindent 12 }}
           volumeMounts:
           - name: shenyu-admin-config
             mountPath: /opt/shenyu-admin/conf/application.yml
