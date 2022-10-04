@@ -9,11 +9,31 @@ admin:
   image: apache/shenyu-admin
   # if you want to change "admin service port", please edit here
   nodePort: 31095
+  # jvm options for admin
+  javaOpts: ""
+  # K8s resources quota for admin
+  resources:
+#    requests:
+#      cpu: 100m
+#      memory: 512Mi
+#    limits:
+#      cpu: 1000m
+#      memory: 1024Mi
 bootstrap:
   enabled: true
   image: apache/shenyu-bootstrap
   # if you want to change "bootstrap service port", please edit here
   nodePort: 31195
+  # jvm options for bootstrap
+  javaOpts: ""
+  # K8s resources quota for bootstrap
+  resources:
+#    requests:
+#      cpu: 100m
+#      memory: 512Mi
+#    limits:
+#      cpu: 1000m
+#      memory: 1024Mi
 
 #################################################
 #     datasource config of shenyu-admin         #
@@ -45,7 +65,6 @@ dataSource:
     # pg driver class name
     driverClass: org.postgresql.Driver
     connectorVersion: 42.5.0
-  # not supported yet, coming soon
   oracle:
     ip:
     port: 1521
