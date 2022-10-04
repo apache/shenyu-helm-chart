@@ -20,7 +20,7 @@ bootstrap:
 #################################################
 
 dataSource:
-  # options: [h2, mysql]
+  # options: [h2, mysql, pg]
   active: h2
   # init database and tables
   initEnabled: true
@@ -37,6 +37,23 @@ dataSource:
     # mysql6-8 : com.mysql.cj.jdbc.Driver
     driverClass: com.mysql.cj.jdbc.Driver
     connectorVersion: 8.0.23
+  pg:
+    ip:
+    port: 5432
+    username: postgres
+    password:
+    # pg driver class name
+    driverClass: org.postgresql.Driver
+    connectorVersion: 42.5.0
+  # not supported yet, coming soon
+  oracle:
+    ip:
+    port: 1521
+    username: root
+    password:
+    # oracle driver class name
+    driverClass: oracle.jdbc.OracleDriver
+    connectorVersion: 19.3.0.0
 
 #################################################
 #     application.yml of admin and bootstrap    #
@@ -218,14 +235,14 @@ applicationConfig:
         maxSize: 10
       sync:
         websocket:
-          urls: ws://{{ template "common.names.fullname" . }}-admin.shenyu.svc.cluster.local:9095/websocket
-          allowOrigin: ws://{{ template "common.names.fullname" . }}-bootstrap.shenyu.svc.cluster.local:9195
+          urls: ws://{{ template "common.names.fullname" . }}-admin.{{.Release.Namespace}}.svc.cluster.local:9095/websocket
+          allowOrigin: ws://{{ template "common.names.fullname" . }}-bootstrap.{{.Release.Namespace}}.svc.cluster.local:9195
       #    zookeeper:
       #      url: localhost:2181
       #      sessionTimeout: 5000
       #      connectionTimeout: 2000
       #    http:
-      #      url: http://{{ template "common.names.fullname" . }}-admin.shenyu.svc.cluster.local:9095
+      #      url: http://{{ template "common.names.fullname" . }}-admin.{{.Release.Namespace}}.svc.cluster.local:9095
       #      username:
       #      password:
       #    nacos:
@@ -351,7 +368,7 @@ applicationConfig:
         websocket:
           enabled: true
           messageMaxSize: 10240
-          allowOrigins: ws://{{ template "common.names.fullname" . }}-admin.shenyu.svc.cluster.local:9095;ws://{{ template "common.names.fullname" . }}-bootstrap.shenyu.svc.cluster.local:9195;
+          allowOrigins: ws://{{ template "common.names.fullname" . }}-admin.{{.Release.Namespace}}.svc.cluster.local:9095;ws://{{ template "common.names.fullname" . }}-bootstrap.{{.Release.Namespace}}.svc.cluster.local:9195;
       #      zookeeper:
       #        url: localhost:2181
       #        sessionTimeout: 5000
