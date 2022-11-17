@@ -13,12 +13,18 @@ admin:
   javaOpts: ""
   # K8s resources quota for admin
   resources:
-#    requests:
-#      cpu: 100m
-#      memory: 512Mi
-#    limits:
-#      cpu: 1000m
-#      memory: 1024Mi
+  #    requests:
+  #      cpu: 100m
+  #      memory: 512Mi
+  #    limits:
+  #      cpu: 1000m
+  #      memory: 1024Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 75
+    targetMemoryUtilizationPercentage: 75
 bootstrap:
   enabled: true
   image: apache/shenyu-bootstrap
@@ -28,12 +34,19 @@ bootstrap:
   javaOpts: ""
   # K8s resources quota for bootstrap
   resources:
-#    requests:
-#      cpu: 100m
-#      memory: 512Mi
-#    limits:
-#      cpu: 1000m
-#      memory: 1024Mi
+  #    requests:
+  #      cpu: 100m
+  #      memory: 512Mi
+  #    limits:
+  #      cpu: 1000m
+  #      memory: 1024Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 75
+    targetMemoryUtilizationPercentage: 75
+
 
 #################################################
 #     datasource config of shenyu-admin         #
@@ -233,7 +246,7 @@ applicationConfig:
         allowedMethods: "*"
         # the same of Access-Control-Allow-Origin: "*"
         allowedAnyOrigin: true
-          #    allowedOrigin:
+        #    allowedOrigin:
         # format : schema://prefix spacer domain
         # Access-Control-Allow-Origin: "http://a.apache.org,http://b.apache.org"
         #      spacer: "."

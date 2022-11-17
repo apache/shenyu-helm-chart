@@ -1,0 +1,32 @@
+{{- if .Values.bootstrap.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "common.names.fullname" . }}-admin
+  labels:
+    "app.kubernetes.io/name": '{{ template "common.names.name" . }}-bootstrap'
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+    "app.kubernetes.io/component": "shenyu-bootstrap"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "common.names.fullname" . }}-bootstrap
+  minReplicas: {{ .Values.bootstrap.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.bootstrap.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.bootstrap.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.bootstrap.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.bootstrap.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.bootstrap.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
