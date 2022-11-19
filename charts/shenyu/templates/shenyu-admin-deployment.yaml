@@ -14,7 +14,7 @@ spec:
     matchLabels:
       "app.kubernetes.io/component": "shenyu-admin"
       "app.kubernetes.io/instance": "{{ .Release.Name }}"
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.admin.replicas }}
   template:
     metadata:
       labels:
