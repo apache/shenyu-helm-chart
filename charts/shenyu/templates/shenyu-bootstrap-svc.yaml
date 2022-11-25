@@ -17,7 +17,7 @@ spec:
   type: NodePort
   ports:
     - protocol: TCP
-      port: 9195
-      targetPort: 9195
-      nodePort: {{ .Values.bootstrap.nodePort }}
+      port: {{ .Values.bootstrap.service.port }}
+      targetPort: {{ .Values.bootstrap.service.targetPod }}
+      nodePort: {{ .Values.bootstrap.service.nodePort }}
 {{- end -}}
