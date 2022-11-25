@@ -3,9 +3,10 @@
 #################################################
 # it's not recommended to change this version
 version: 2.5.0
-replicas: 1
 admin:
   enabled: true
+  # replicas of admin, K8s will load balance the requests
+  replicas: 1
   image: apache/shenyu-admin
   # if you want to change "admin service port", please edit here
   nodePort: 31095
@@ -27,6 +28,8 @@ admin:
     targetMemoryUtilizationPercentage: 75
 bootstrap:
   enabled: true
+  # replicas of bootstrap, K8s will load balance the requests
+  replicas: 2
   image: apache/shenyu-bootstrap
   # if you want to change "bootstrap service port", please edit here
   nodePort: 31195
