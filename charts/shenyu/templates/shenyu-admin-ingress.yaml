@@ -1,39 +1,64 @@
 {{- if .Values.admin.ingress.enabled -}}
 {{- $fullName := include "common.names.fullname" . -}}
-{{- $ingressPath := .Values.admin.ingress.path -}}
-{{- $servicePort := .Values.admin.service.port -}}
+{{- $svcPort := .Values.admin.service.port -}}
+{{- if and .Values.admin.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
+  {{- if not (hasKey .Values.admin.ingress.annotations "kubernetes.io/ingress.class") }}
+  {{- $_ := set .Values.admin.ingress.annotations "kubernetes.io/ingress.class" .Values.admin.ingress.className}}
+  {{- end }}
+{{- end }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
 apiVersion: extensions/v1beta1
+{{- end }}
 kind: Ingress
 metadata:
-  name: '{{ $fullName }}-admin'
+  name: {{ $fullName }}-admin
   labels:
     "app.kubernetes.io/name": '{{ template "common.names.name" . }}-admin'
     "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
     "app.kubernetes.io/component": "shenyu-admin"
     "app.kubernetes.io/instance": "{{ .Release.Name }}"
-{{- with .Values.admin.ingress.annotations }}
+  {{- with .Values.admin.ingress.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
-spec:
-{{- if .Values.admin.ingress.tls }}
-  tls:
-  {{- range .Values.admin.ingress.tls }}
-    - hosts:
-      {{- range .hosts }}
-        - {{ . }}
-      {{- end }}
-      secretName: {{ .secretName }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
-{{- end }}
+spec:
+  {{- if and .Values.admin.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .Values.admin.ingress.className }}
+  {{- end }}
+  {{- if .Values.admin.ingress.tls }}
+  tls:
+    {{- range .Values.admin.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
   rules:
-  {{- range .Values.admin.ingress.hosts }}
-    - host: {{ . }}
+    {{- range .Values.admin.ingress.hosts }}
+    - host: {{ .host | quote }}
       http:
         paths:
-          - path: {{ $ingressPath }}
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: {{ $servicePort }}
-  {{- end }}
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-admin
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-admin
+              servicePort: {{ $svcPort }}
+              {{- end }}
+          {{- end }}
+    {{- end }}
 {{- end }}
