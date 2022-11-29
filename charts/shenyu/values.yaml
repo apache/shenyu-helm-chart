@@ -29,11 +29,10 @@ admin:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 75
     targetMemoryUtilizationPercentage: 75
-
   ingress:
     enabled: ture
     className: ""
-    annotations: { }
+    annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     hosts:
@@ -41,13 +40,10 @@ admin:
         paths:
           - path: /
             pathType: ImplementationSpecific
-    tls: [ ]
+    tls: []
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
-
-
-
 bootstrap:
   enabled: true
   # replicas of bootstrap, K8s will load balance the requests
@@ -68,8 +64,6 @@ bootstrap:
   #    limits:
   #      cpu: 1000m
   #      memory: 1024Mi
-
-
 
 #################################################
 #     datasource config of shenyu-admin         #
