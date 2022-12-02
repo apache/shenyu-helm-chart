@@ -17,7 +17,7 @@ spec:
   type: NodePort
   ports:
     - protocol: TCP
-      port: 9095
-      targetPort: 9095
-      nodePort: {{ .Values.admin.nodePort }}
+      port: {{ .Values.admin.service.port }}
+      targetPort: {{ .Values.admin.service.targetPod }}
+      nodePort: {{ .Values.admin.service.nodePort }}
 {{- end -}}

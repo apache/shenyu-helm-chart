@@ -8,35 +8,62 @@ admin:
   # replicas of admin, K8s will load balance the requests
   replicas: 1
   image: apache/shenyu-admin
-  # if you want to change "admin service port", please edit here
-  nodePort: 31095
+  service:
+    port: 9095
+    targetPod: 9095
+    # if you want to change "admin service port", please edit here
+    nodePort: 31095
   # jvm options for admin
   javaOpts: ""
   # K8s resources quota for admin
   resources:
-#    requests:
-#      cpu: 100m
-#      memory: 512Mi
-#    limits:
-#      cpu: 1000m
-#      memory: 1024Mi
+  #    requests:
+  #      cpu: 100m
+  #      memory: 512Mi
+  #    limits:
+  #      cpu: 1000m
+  #      memory: 1024Mi
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 75
+    targetMemoryUtilizationPercentage: 75
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: shenyu-admin.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
 bootstrap:
   enabled: true
   # replicas of bootstrap, K8s will load balance the requests
   replicas: 2
   image: apache/shenyu-bootstrap
-  # if you want to change "bootstrap service port", please edit here
-  nodePort: 31195
+  service:
+    port: 9195
+    targetPod: 9195
+    # if you want to change "bootstrap service port", please edit here
+    nodePort: 31195
   # jvm options for bootstrap
   javaOpts: ""
   # K8s resources quota for bootstrap
   resources:
-#    requests:
-#      cpu: 100m
-#      memory: 512Mi
-#    limits:
-#      cpu: 1000m
-#      memory: 1024Mi
+  #    requests:
+  #      cpu: 100m
+  #      memory: 512Mi
+  #    limits:
+  #      cpu: 1000m
+  #      memory: 1024Mi
 
 #################################################
 #     datasource config of shenyu-admin         #
@@ -236,7 +263,7 @@ applicationConfig:
         allowedMethods: "*"
         # the same of Access-Control-Allow-Origin: "*"
         allowedAnyOrigin: true
-          #    allowedOrigin:
+        #    allowedOrigin:
         # format : schema://prefix spacer domain
         # Access-Control-Allow-Origin: "http://a.apache.org,http://b.apache.org"
         #      spacer: "."
