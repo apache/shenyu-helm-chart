@@ -2,7 +2,7 @@
 #                global configs                 #
 #################################################
 # it's not recommended to change this version
-version: 2.5.0
+version: 2.5.1
 admin:
   enabled: true
   # replicas of admin, K8s will load balance the requests
@@ -142,7 +142,6 @@ applicationConfig:
     spring:
       main:
         allow-bean-definition-overriding: true
-        allow-circular-references: true
       application:
         name: shenyu-bootstrap
       codec:
@@ -190,10 +189,15 @@ applicationConfig:
           enabled: false
 
     shenyu:
+      trie:
+        childrenSize: 10000
+        pathVariableSize: 1000
+        pathRuleCacheSize: 1000
+        matchMode: antPathMatch
       matchCache:
-        enabled: false
+        selectorEnabled: false
         # 256MB
-        maxFreeMemory: 256
+        maxSelectorFreeMemory: 256
       netty:
         http:
           # set to false, user can custom the netty tcp server config.
@@ -271,7 +275,7 @@ applicationConfig:
       #      selectCount: 1
       #      workerCount: 8
       #      daemon: true
-      instance:
+      register:
         enabled: false
         # zookeeper, etcd, consul
         registerType: zookeeper
@@ -490,6 +494,21 @@ applicationConfig:
           - /csrf
       swagger:
         enable: true
+      dashboard:
+        core:
+          onlySuperAdminPermission:
+            - system:manager:add
+            - system:manager:edit
+            - system:manager:delete
+            - system:role:add
+            - system:role:edit
+            - system:role:delete
+            - system:resource:addButton
+            - system:resource:addMenu
+            - system:resource:editButton
+            - system:resource:editMenu
+            - system:resource:deleteButton
+            - system:resource:deleteMenu
 
     logging:
       level:
