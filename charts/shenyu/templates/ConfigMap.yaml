@@ -38,7 +38,7 @@ data:
         init_enable: {{ .Values.dataSource.initEnabled }}
     spring:
       datasource:
-        url: jdbc:mysql://{{ template "common.names.fullname" . }}-mysql.{{.Release.Namespace}}.svc.cluster.local:3306/{{ required "" .Values.dataSource.mysql.database | default "shenyu" }}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+        url: jdbc:mysql://{{.Values.dataSource.mysql.ip}}:{{.Values.dataSource.mysql.port}}/{{ required "" .Values.dataSource.mysql.database | default "shenyu" }}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
         username: {{ required ".dataSource.mysql.username is required" .Values.dataSource.mysql.username }}
         password: {{ required "`dataSource.mysql.password` is required" .Values.dataSource.mysql.password }}
         driver-class-name: {{ .Values.dataSource.mysql.driverClass }}
@@ -52,7 +52,7 @@ data:
 
     spring:
       datasource:
-        url: jdbc:postgresql://{{ template "common.names.fullname" . }}-pg.{{.Release.Namespace}}.svc.cluster.local:5432/{{ .Values.dataSource.pg.database | default "shenyu" }}
+        url: jdbc:postgresql://{{.Values.dataSource.pg.ip}}:{{.Values.dataSource.pg.port}}/{{ .Values.dataSource.pg.database | default "shenyu" }}
         username: {{ required ".dataSource.pg.username is required" .Values.dataSource.pg.username }}
         password: {{ required "`dataSource.pg.password` is required" .Values.dataSource.pg.password }}
         driver-class-name: {{ .Values.dataSource.pg.driverClass }}
@@ -69,7 +69,7 @@ data:
 
     spring:
       datasource:
-        url: jdbc:oracle:thin:@{{ template "common.names.fullname" . }}-oracle.{{.Release.Namespace}}.svc.cluster.local:1521/{{ .Values.dataSource.oracle.serviceName | default "shenyu" }}
+        url: jdbc:oracle:thin:@{{.Values.dataSource.oracle.ip}}:{{.Values.dataSource.oracle.port}}/{{ .Values.dataSource.oracle.serviceName | default "shenyu" }}
         username: {{ required ".dataSource.oracle.username is required" .Values.dataSource.oracle.username }}
         password: {{ required "`dataSource.oracle.password` is required" .Values.dataSource.oracle.password }}
         driver-class-name: oracle.jdbc.OracleDriver
