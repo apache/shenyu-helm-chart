@@ -96,9 +96,13 @@ dataSource:
   # init database and tables
   initEnabled: true
   h2:
+    # use custom datasource url, default is jdbc:h2:mem:~/shenyu;DB_CLOSE_DELAY=-1;MODE=MySQL;
+    url: ""
     username: sa
     password: sa
   mysql:
+    # use custom datasource url and ignore other configs, the format is jdbc:mysql://xxxxxxx
+    urlOverride: ""
     ip:
     port: 3306
     username: root
@@ -110,6 +114,8 @@ dataSource:
     driverClass: com.mysql.cj.jdbc.Driver
     connectorVersion: 8.0.23
   pg:
+    # use custom datasource url and ignore other configs, the format is jdbc:postgresql://xxxxxxx
+    urlOverride: ""
     ip:
     port: 5432
     username: postgres
@@ -119,6 +125,8 @@ dataSource:
     driverClass: org.postgresql.Driver
     connectorVersion: 42.5.0
   oracle:
+    # use custom datasource url and ignore other configs, the format is jdbc:oracle:xxxxxx
+    urlOverride: ""
     ip:
     port: 1521
     username: root
