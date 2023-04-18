@@ -357,9 +357,11 @@ applicationConfig:
           - /fallback/hystrix
           - /fallback/resilience4j
       health:
-        enabled: false
+        enabled: true
         paths:
           - /actuator/health
+          - /actuator/health/readiness
+          - /actuator/health/liveness
           - /health_check
       extPlugin:
         path:

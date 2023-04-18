@@ -31,3 +31,24 @@
     {{- end }}
 {{- end }}
 {{- end -}}
+
+
+{{- define "shenyu.admin.labels" -}}
+{{ include "common.labels.standard" . }}
+app.kubernetes.io/component: shenyu-admin
+{{- end -}}
+
+{{- define "shenyu.admin.selectorLabels" -}}
+{{ include "common.labels.matchLabels" . }}
+app.kubernetes.io/component: shenyu-admin
+{{- end -}}
+
+{{- define "shenyu.bootstrap.labels" -}}
+{{ include "common.labels.standard" . }}
+app.kubernetes.io/component: shenyu-bootstrap
+{{- end -}}
+
+{{- define "shenyu.bootstrap.selectorLabels" -}}
+{{ include "common.labels.matchLabels" . }}
+app.kubernetes.io/component: shenyu-bootstrap
+{{- end -}}

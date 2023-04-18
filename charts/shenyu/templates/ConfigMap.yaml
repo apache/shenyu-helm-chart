@@ -4,10 +4,7 @@ metadata:
   namespace: {{.Release.Namespace}}
   name: {{ template "common.names.fullname" . }}-configmap
   labels:
-    "app.kubernetes.io/name": '{{ template "common.names.name" . }}'
-    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
-    "app.kubernetes.io/component": "shenyu-configmap"
-    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    {{- include "common.labels.standard" . | nindent 4 }}
 data:
   application-bootstrap.yml: |-
     {{- /* Put the whole application-bootstrap.yml here*/}}

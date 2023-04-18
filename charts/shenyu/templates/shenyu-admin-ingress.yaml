@@ -17,10 +17,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}-admin
   labels:
-    "app.kubernetes.io/name": '{{ template "common.names.name" . }}-admin'
-    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
-    "app.kubernetes.io/component": "shenyu-admin"
-    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    {{- include "shenyu.admin.labels" . | nindent 4 }}
   {{- with .Values.admin.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
