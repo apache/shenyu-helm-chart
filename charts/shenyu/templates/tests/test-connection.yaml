@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ template "common.names.fullname" .}}-test-connection"
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['sh', '-c']
+      args:
+       - |
+         wget -q -O - '{{ include "common.names.fullname" . }}-admin:{{ .Values.admin.service.port }}/actuator/health'
+         wget -q -O - '{{ include "common.names.fullname" . }}-bootstrap:{{ .Values.bootstrap.service.port }}/actuator/health'
+         # TODO add more tests, such as shenyu test scripts
+  restartPolicy: Never

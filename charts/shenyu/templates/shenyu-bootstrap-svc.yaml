@@ -6,14 +6,10 @@ metadata:
   namespace: {{ .Release.Namespace }}
   name: {{ template "common.names.fullname" . }}-bootstrap
   labels:
-    "app.kubernetes.io/name": '{{ template "common.names.name" .}}-bootstrap'
-    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
-    "app.kubernetes.io/component": "shenyu-bootstrap"
-    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    {{- include "shenyu.bootstrap.labels" . | nindent 4 }}
 spec:
   selector:
-    "app.kubernetes.io/component": "shenyu-bootstrap"
-    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    {{- include "shenyu.bootstrap.selectorLabels" . | nindent 4 }}
   type: NodePort
   ports:
     - protocol: TCP

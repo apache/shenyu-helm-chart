@@ -17,10 +17,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}-bootstrap
   labels:
-    "app.kubernetes.io/name": '{{ template "common.names.name" . }}-bootstrap'
-    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
-    "app.kubernetes.io/component": "shenyu-bootstrap"
-    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    {{- include "shenyu.bootstrap.labels" . | nindent 4 }}
   {{- with .Values.bootstrap.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
