@@ -10,7 +10,7 @@ maintainers:
     email: wannengdek@gmail.com
   - name: aFlyBird0
     email: aflybird0@gmail.com
-dependencies:
-  - name: common
-    version: 1.x.x
-    repository: https://charts.bitnami.com/bitnami
+# dependencies:
+  # - name: common
+  #   version: 1.x.x
+  #   repository: https://charts.bitnami.com/bitnami
